@@ -70,13 +70,18 @@ namespace sorting
             var result = (int[])values.Clone();
             if (result.Length < 2) return result;
 
-            for (var i = 0; i < result.Length - 1; i++) {
-                if (result[i] <= result[i + 1]) continue;
-                
-                var t = result[i];
-                result[i] = result[i+1];
-                result[i+1] = t;
-            }
+            bool aSwapWasDone;
+            do {
+                aSwapWasDone = false;
+                for (var i = 0; i < result.Length - 1; i++) {
+                    if (result[i] <= result[i + 1]) continue;
+
+                    var t = result[i];
+                    result[i] = result[i + 1];
+                    result[i + 1] = t;
+                    aSwapWasDone = true;
+                }
+            } while (aSwapWasDone);
 
             return result;
         }
