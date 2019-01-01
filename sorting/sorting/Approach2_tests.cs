@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Xunit;
 
 namespace sorting
@@ -35,13 +36,30 @@ namespace sorting
             [InlineData(new[]{4,3,2}, 3)]
             [InlineData(new[]{4,3,2,1}, 2)]
             [InlineData(new[]{4,3,2,1,0}, 2)]
-            public void Pick_pivot(int[] values, int expected)
+            public void Pick_pivot_tests(int[] values, int expected)
             {
                 var result = PickPivot(values);
                 Assert.Equal(expected, result);
             }
-            
 
+
+            [Theory]
+            [InlineData(new[]{3,4,2,6,7,5}, 4, 3, 3)]
+            [InlineData(new[]{3,4,2,6,7,5}, 2, 2, 4)]
+            [InlineData(new[]{3,4,2,6,7,5}, 5, 4, 2)]
+            public void Partiton_tests(int[] values, int pivot, int expectedLowerLen, int expectedUpperLen)
+            {
+                var result = Partition(values, pivot);
+                
+                Assert.Equal(expectedLowerLen, result.lower.Length);
+                Assert.True(result.lower.All(v => v <= pivot));
+                
+                Assert.Equal(expectedUpperLen, result.upper.Length);
+                Assert.True(result.upper.Any(v => v > pivot));
+            }
+
+            
+            
             public int[] Sort(int[] values)
             {
                 Span<int> x = values;
@@ -51,6 +69,11 @@ namespace sorting
             private int PickPivot(int[] values) {
                 var iPivot = values.Length == 1 ? 0 : values.Length / 2;
                 return values[iPivot];
+            }
+
+            private (int[] lower, int[] upper) Partition(int[] values, int pivot)
+            {
+                throw new NotImplementedException();
             }
         }
     }
