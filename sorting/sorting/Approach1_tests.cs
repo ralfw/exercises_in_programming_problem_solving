@@ -10,6 +10,7 @@ namespace sorting
         {
             var values = new int[0];
             var result = Sort(values);
+            Assert.Empty(result);
         }
 
 
