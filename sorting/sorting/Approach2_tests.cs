@@ -31,6 +31,8 @@ namespace sorting
 
             [Theory]
             [InlineData(new[]{4}, 4)]
+            [InlineData(new[]{4,3}, 4)]
+            [InlineData(new[]{4,3,2}, 3)]
             public void Pick_pivot(int[] values, int expected)
             {
                 var result = PickPivot(values);
