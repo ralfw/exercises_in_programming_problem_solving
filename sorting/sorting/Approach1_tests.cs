@@ -31,6 +31,14 @@ namespace sorting
             Assert.NotSame(result, values);
             Assert.Equal(new[]{2}, result);
         }
+        
+        
+        [Fact]
+        public void Swap_two_unsorted_values() {
+            var values = new[] {3,2};
+            var result = Sort(values);
+            Assert.Equal(new[]{2,3}, result);
+        }
 
 
         private int[] Sort(int[] values)
