@@ -70,15 +70,17 @@ namespace sorting
             var result = (int[])values.Clone();
             if (result.Length < 2) return result;
 
-            var numberOfSwaps = 0;
-            do {
-                numberOfSwaps = 0;
-                for (var i = 0; i < result.Length-1; i++)
-                    numberOfSwaps += SwapIfNecessary(i, i + 1) ? 1 : 0;
-            } while (numberOfSwaps>0);
-
+            while (BubbleUpPass()){}
+            
             return result;
 
+
+            bool BubbleUpPass() {
+                var numberOfSwaps = 0;
+                for (var i = 0; i < result.Length-1; i++)
+                    numberOfSwaps += SwapIfNecessary(i, i + 1) ? 1 : 0;
+                return numberOfSwaps > 0;
+            }
 
             bool SwapIfNecessary(int a, int b) {
                 if (result[a] <= result[b]) return false;
