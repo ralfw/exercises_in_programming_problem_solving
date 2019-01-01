@@ -31,8 +31,10 @@ namespace sorting
 
             [Theory]
             [InlineData(new[]{4}, 4)]
-            [InlineData(new[]{4,3}, 4)]
+            [InlineData(new[]{4,3}, 3)]
             [InlineData(new[]{4,3,2}, 3)]
+            [InlineData(new[]{4,3,2,1}, 2)]
+            [InlineData(new[]{4,3,2,1,0}, 2)]
             public void Pick_pivot(int[] values, int expected)
             {
                 var result = PickPivot(values);
@@ -46,9 +48,9 @@ namespace sorting
                 throw new NotImplementedException();
             }
 
-            private int PickPivot(int[] values)
-            {
-                return values[0];
+            private int PickPivot(int[] values) {
+                var iPivot = values.Length == 1 ? 0 : values.Length / 2;
+                return values[iPivot];
             }
         }
     }

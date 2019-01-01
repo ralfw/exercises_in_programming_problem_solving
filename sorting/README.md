@@ -74,7 +74,7 @@ Test cases for the pivot picking function `int PickPivot(int[] values)`
 
 * `[]` -> exception
 * `[4]` -> `4`
-* `[4,3]` -> `4`
+* `[4,3]` -> `3`
 * `[4,3,2]` -> `3`
 
 #### Partitioning
