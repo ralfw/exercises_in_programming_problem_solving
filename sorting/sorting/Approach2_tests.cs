@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 
 namespace sorting
@@ -25,6 +26,13 @@ namespace sorting
                 var values = new int[0];
                 var result = Sort(values);
                 Assert.Empty(result);
+            }
+
+            
+
+            private int[] Sort(int[] values)
+            {
+                throw new NotImplementedException();
             }
         }
     }
