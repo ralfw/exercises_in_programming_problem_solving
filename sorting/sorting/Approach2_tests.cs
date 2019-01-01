@@ -45,8 +45,11 @@ namespace sorting
 
             [Theory]
             [InlineData(new[]{3,4,2,6,7,5}, 4, 3, 3)]
-            [InlineData(new[]{3,4,2,6,7,5}, 2, 2, 4)]
+            [InlineData(new[]{3,4,2,6,7,5}, 3, 2, 4)]
             [InlineData(new[]{3,4,2,6,7,5}, 5, 4, 2)]
+            [InlineData(new[]{3,4}, 4, 2, 0)]
+            [InlineData(new[]{4,3}, 4, 2, 0)]
+            [InlineData(new[]{3,4,5}, 4, 2, 1)]
             public void Partiton_tests(int[] values, int pivot, int expectedLowerLen, int expectedUpperLen)
             {
                 var result = Partition(values, pivot);
@@ -55,7 +58,7 @@ namespace sorting
                 Assert.True(result.lower.All(v => v <= pivot));
                 
                 Assert.Equal(expectedUpperLen, result.upper.Length);
-                Assert.True(result.upper.Any(v => v > pivot));
+                Assert.True(result.upper.All(v => v > pivot));
             }
 
             
@@ -71,9 +74,18 @@ namespace sorting
                 return values[iPivot];
             }
 
-            private (int[] lower, int[] upper) Partition(int[] values, int pivot)
-            {
-                throw new NotImplementedException();
+            private (int[] lower, int[] upper) Partition(int[] values, int pivot) {
+                var result = new int[values.Length];
+                var iLower = 0;
+                var iUpper = result.Length - 1;
+                
+                foreach (var t in values)
+                    if (t <= pivot)
+                        result[iLower++] = t;
+                    else
+                        result[iUpper--] = t;
+
+                return (result.Take(iLower).ToArray(),result.Skip(iLower).ToArray());
             }
         }
     }
