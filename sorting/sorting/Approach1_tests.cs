@@ -69,12 +69,12 @@ namespace sorting
         private int[] Sort(int[] values) {
             var result = (int[])values.Clone();
 
-            while (BubbleUpPass().bubblingHappened){}
+            while (LetLargerValuesBubbleUp().bubblingHappened){}
             
             return result;
 
 
-            (bool bubblingHappened, int numberOfBubbles) BubbleUpPass() {
+            (bool bubblingHappened, int numberOfBubbles) LetLargerValuesBubbleUp() {
                 var numberOfSwaps = 0;
                 for (var i = 0; i < result.Length-1; i++)
                     numberOfSwaps += SwapIfNecessary(i, i + 1) ? 1 : 0;
