@@ -23,7 +23,8 @@ namespace sorting
 
         private int[] Sort(int[] values)
         {
-            return values;
+            var result = (int[])values.Clone();
+            return result;
         }
     }
 }
