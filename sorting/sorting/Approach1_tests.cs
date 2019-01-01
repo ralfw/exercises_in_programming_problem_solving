@@ -39,16 +39,23 @@ namespace sorting
             var result = Sort(values);
             Assert.Equal(new[]{2,3}, result);
         }
+        
+        [Fact]
+        public void Dont_swap_two_sorted_values() {
+            var values = new[] {2,3};
+            var result = Sort(values);
+            Assert.Equal(new[]{2,3}, result);
+        }
 
 
         private int[] Sort(int[] values) {
             var result = (int[])values.Clone();
             if (result.Length < 2) return result;
-            
+
             var t = result[0];
             result[0] = result[1];
             result[1] = t;
-            
+
             return result;
         }
     }
