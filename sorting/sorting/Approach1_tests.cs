@@ -76,14 +76,19 @@ namespace sorting
                 for (var i = 0; i < result.Length - 1; i++) {
                     if (result[i] <= result[i + 1]) continue;
 
-                    var t = result[i];
-                    result[i] = result[i + 1];
-                    result[i + 1] = t;
+                    Swap(i,i+1);
                     aSwapWasDone = true;
                 }
             } while (aSwapWasDone);
 
             return result;
+
+
+            void Swap(int a, int b) {
+                var t = result[a];
+                result[a] = result[b];
+                result[b] = t;
+            }
         }
     }
 }

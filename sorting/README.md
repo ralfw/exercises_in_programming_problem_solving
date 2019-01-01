@@ -35,14 +35,23 @@ a. Find the largest value in slice [1..m] and swap with value [m+1]; start with 
 
 b. Go through all value pairs and swap if needed. Repeat until no swaps were needed anymore.
 
-Both approaches require swapping which is already implemented at this point. But approach a. introduces a new concept: a maximum value. Hence approach b. seems simpler.
+Both approaches require swapping which is already implemented at this point. But approach a. introduces a new concept: a maximum value. Hence approach b. seems simpler; it sticks to swapping which now is just done several times.
 
 A slightly more difficult test case for approach b. would be one where only a single pass needs to be done over all values, e.g.
 
 * `[3,1,2]` -> `[1,2,3]`
 
-The next even more difficult test case should require several passes. It also should finish the implementation; the acceptance test also should turn green.
+After that the next even more difficult test case should require several passes. It also should finish the implementation; the acceptance test also should turn green.
 
 * `[3,2,1]` -> `[1,2,3]`
+
+Approach b. is what's called [Bubble Sort](https://en.wikipedia.org/wiki/Sorting_algorithm#Bubble_sort).
+
+#### Refactoring
+The solution less than 20 lines long. There's no duplication in it. Refactoring does not seem to be required.
+
+Nevertheless the solution consists of some concepts which are not easily discernable in the code, e.g. swapping, a pass, repetition until no more swaps are needed.
+
+
 
 
