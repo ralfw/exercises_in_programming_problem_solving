@@ -16,7 +16,7 @@ namespace sorting
 
         private int[] Sort(int[] values)
         {
-            throw new NotImplementedException();
+            return values;
         }
     }
 }
