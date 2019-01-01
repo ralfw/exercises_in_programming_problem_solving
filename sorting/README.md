@@ -41,6 +41,8 @@ A slightly more difficult test case for approach b. would be one where only a si
 
 * `[3,1,2]` -> `[1,2,3]`
 
+The next even more difficult test case should require several passes. It also should finish the implementation; the acceptance test also should turn green.
 
+* `[3,2,1]` -> `[1,2,3]`
 
 

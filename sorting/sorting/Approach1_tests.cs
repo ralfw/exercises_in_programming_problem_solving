@@ -57,6 +57,14 @@ namespace sorting
         }
         
         
+        [Fact]
+        public void Repeat_swapping_with_multiple_passes() {
+            var values = new[] {3,2,1};
+            var result = Sort(values);
+            Assert.Equal(new[]{1,2,3}, result);
+        }
+        
+        
         
         private int[] Sort(int[] values) {
             var result = (int[])values.Clone();
