@@ -62,10 +62,12 @@ namespace sorting
             var result = (int[])values.Clone();
             if (result.Length < 2) return result;
 
-            if (result[0] > result[1]) {
-                var t = result[0];
-                result[0] = result[1];
-                result[1] = t;
+            for (var i = 0; i < result.Length - 1; i++) {
+                if (result[i] <= result[i + 1]) continue;
+                
+                var t = result[i];
+                result[i] = result[i+1];
+                result[i+1] = t;
             }
 
             return result;
