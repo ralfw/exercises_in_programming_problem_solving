@@ -68,7 +68,6 @@ namespace sorting
         
         private int[] Sort(int[] values) {
             var result = (int[])values.Clone();
-            if (result.Length < 2) return result;
 
             while (BubbleUpPass().bubblingHappened){}
             
