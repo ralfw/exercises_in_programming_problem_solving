@@ -28,9 +28,23 @@ namespace sorting
                 Assert.Empty(result);
             }
 
+
+            [Theory]
+            [InlineData(new[]{4}, 4)]
+            public void Pick_pivot(int[] values, int expected)
+            {
+                var result = PickPivot(values);
+                Assert.Equal(expected, result);
+            }
             
 
-            private int[] Sort(int[] values)
+            public int[] Sort(int[] values)
+            {
+                Span<int> x = values;
+                throw new NotImplementedException();
+            }
+
+            private int PickPivot(int[] values)
             {
                 throw new NotImplementedException();
             }
