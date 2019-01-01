@@ -22,7 +22,24 @@ It seems the problem of sorting can be made successively more difficult starting
 * `[2]` -> `[2]` // a new array with the same content should be returned
 * `[3,2]` -> `[2,3]` // swapping of two values
 * `[2,3]` -> `[2,3]` // no swapping of values required (an alternative is introduced)
-* `[3,2,1]` -> `[1,2,3]` // swapping needs to be done several times (a loop is introduced)
+
+So far, so easy. But what's the next slightly more difficult test?
+
+Is it `[3,1,2]` -> `[1,2,3]` or would `[1,3,2]` -> `[1,2,3]` be easier – or would even `[3,2,1]` -> `[1,2,3]` be ok?
+
+Without an idea of how to actually do the sorting, that's hard to say.
+
+Two approaches come to mind:
+
+a. Find the largest value in slice [1..m] and swap with value [m+1]; start with m=n-1. Repeat with m-1 etc.
+
+b. Go through all value pairs and swap if needed. Repeat until no swaps were needed anymore.
+
+Both approaches require swapping which is already implemented at this point. But approach a. introduces a new concept: a maximum value. Hence approach b. seems simpler.
+
+A slightly more difficult test case for approach b. would be one where only a single pass needs to be done over all values, e.g.
+
+* `[3,1,2]` -> `[1,2,3]`
 
 
 

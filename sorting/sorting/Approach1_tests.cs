@@ -40,6 +40,7 @@ namespace sorting
             Assert.Equal(new[]{2,3}, result);
         }
         
+        
         [Fact]
         public void Dont_swap_two_sorted_values() {
             var values = new[] {2,3};
@@ -47,7 +48,16 @@ namespace sorting
             Assert.Equal(new[]{2,3}, result);
         }
        
-
+        
+        [Fact]
+        public void Repeat_swapping_with_single_pass() {
+            var values = new[] {3,1,2};
+            var result = Sort(values);
+            Assert.Equal(new[]{1,2,3}, result);
+        }
+        
+        
+        
         private int[] Sort(int[] values) {
             var result = (int[])values.Clone();
             if (result.Length < 2) return result;
