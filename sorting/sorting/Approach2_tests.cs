@@ -46,7 +46,7 @@ namespace sorting
 
             private int PickPivot(int[] values)
             {
-                throw new NotImplementedException();
+                return values[0];
             }
         }
     }
