@@ -27,8 +27,230 @@ namespace sorting
             Assert.Empty(result);
         }
         
+
+        [Fact]
+        public void tddaiymi_partition_two_values_wrong_order() {
+            // no partitioning for array with less than 2 elements!
+            var values = new[]{4,3};
+            var pivot = 3;
+
+            var expectedValues = new[]{3,4};
+            var expectedEndOfLessThanPartition = 0;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+
+            // both loops will stop at the pivot at latest
+            while(values[iLargerThan] <= pivot) iLargerThan++;
+            while(values[iLessThan] > pivot) iLessThan--;
+
+            var t = values[iLargerThan];
+            values[iLargerThan] = values[iLessThan];
+            values[iLessThan] = t;
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan);
+        }
+
+        [Fact]
+        public void tddaiymi_partition_two_values_right_order() {
+            // no partitioning for array with less than 2 elements!
+            var values = new[]{3,4};
+            var pivot = 3;
+
+            var expectedValues = new[]{3,4};
+            var expectedEndOfLessThanPartition = 0;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+
+            // both loops will stop at the pivot at latest
+            while(values[iLargerThan] <= pivot) iLargerThan++;
+            while(values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+        }
+
+        [Fact]
+        public void tddaiymi_partition_three_values_wrong_order() {
+            var values = new[]{4,3,2};
+            var pivot = 3;
+
+            var expectedValues = new[]{2,3,4};
+            var expectedEndOfLessThanPartition = 1;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+
+            while(values[iLargerThan] <= pivot) iLargerThan++;
+            while(values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            while(values[iLargerThan] <= pivot) iLargerThan++;
+            while(values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+        }
+
+        [Fact]
+        public void tddaiymi_partition_three_values_right_order() {
+            var values = new[]{2,3,4};
+            var pivot = 3;
+
+            var expectedValues = new[]{2,3,4};
+            var expectedEndOfLessThanPartition = 1;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+
+            while(values[iLargerThan] <= pivot) iLargerThan++;
+            while(values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            while(values[iLargerThan] <= pivot) iLargerThan++;
+            while(values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+        }
+
+        [Fact]
+        public void tddaiymi_partition_three_values_with_pivot_being_highest() {
+            var values = new[]{2,3,1};
+            var pivot = 3;
+
+            var expectedValues = new[]{2,3,1};
+            var expectedEndOfLessThanPartition = 2;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+
+            while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
+            while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
+
+            Assert.False(iLargerThan<iLessThan);
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+        }
+
+        [Fact]
+        public void tddaiymi_partition_three_values_with_pivot_being_lowest() {
+            var values = new[]{2,3,1};
+            var pivot = 1;
+
+            var expectedValues = new[]{1,3,2};
+            var expectedEndOfLessThanPartition = 0;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+
+            while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
+            while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
+            while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
+
+            if (iLargerThan<iLessThan) {
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+        }
         
+
+        [Fact]
+        public void tddaiymi_partition_acceptance() {
+            var values = new[]{3,7,4,5,1,8};
+            var pivot = 5;
+
+            var expectedValues = new[]{3,1,4,5,7,8};
+            var expectedEndOfLessThanPartition = 3;
+
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+            while(true) {
+                while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
+                while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
+                if (iLargerThan>=iLessThan) break;
+
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+        }
+
+        [Fact]
+        public void tddaiymi_partition_acceptance_with_multiple_pivot_values() {
+            var values = new[]{3,7,4,5,1,5,8};
+            var pivot = 5;
+
+            var expectedValues = new[]{3,5,4,5,1,7,8};
+            var expectedEndOfLessThanPartition = 4;
+
+            var iEndOfPartition = Partition(values, pivot);
+
+            Assert.Equal(expectedValues, values);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
+        }
         
+
+        private int Partition(int[] values, int pivot) {
+            var iLargerThan = 0;
+            var iLessThan = values.Length-1;
+            while(true) {
+                while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
+                while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
+                if (iLargerThan>=iLessThan) break;
+
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+            return iLargerThan-1;
+        }
+
         public int[] Sort(int[] values) {
             if (values.Length < 2) return values;
 
