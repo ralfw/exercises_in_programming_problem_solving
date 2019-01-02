@@ -53,7 +53,7 @@ The solution less than 20 lines long. There's no duplication in it. Refactoring 
 Nevertheless the solution consists of some concepts which are not easily discernable in the code, e.g. swapping, a pass, repetition until no more swaps are needed.
 
 ### Approach 2
-This time a specific algorithm is to solve the problem: [Quicksort](https://en.wikipedia.org/wiki/Quicksort).
+This time a specific algorithm is to be used to solve the problem: [Quicksort](https://en.wikipedia.org/wiki/Quicksort).
 
 The overall behavior is the same as with approach no. 1, hence the same acceptance tests.
 
@@ -114,9 +114,29 @@ will lead to the sorted arrays `[2,3]` and `[5,6,7]` and the result
 
 `[2,3] + [4,4] + [5,6,7]` -> `[2,3,4,4,5,6,7]`
 
-Descending is what's done in the function to produce: `Sort()
+Descending is what's done in the function to produce: `Sort()`
 
+#### Retrospective
+Implementing Quicksort did not go as easy as thought. Overall the algorithm is simple. Picking a pivot and integrating it with partitioning into a recursive descent was easy. But I underestimated partitioning.
 
+Even though the description of Quicksort says
+
+> After this partitioning, the pivot is in its final position. 
+
+I did not represent this in the code. That was the reason why the first attempt at partitioning failed when put to the test with the acceptance test data. Since (incidentally) the maximum value was chosen as the pivot there was no larger-than partition - and that threw off the partitioning code.
+
+Even though I tried to be careful during analysis of the partitioning problem I overlooked this case. Not good - but I guess such things just happen.
+
+How to do it better next time?
+
+1. Represent what's 'named' in the requirements. This is now the case with the three partitions returned by `Partition()`: the middle partition stands for the "pivot being in its final position".
+2. When implementing complementary partital solutions (instead of progressing incrementally) an "eco-check" should be made: How do certain output values affect downstream processing steps? The test cases of `Partition()` covered the case where one partition was empty. That wasn't a problem with `Partition()` - but it turned out to be a problem with a subsequent recursive call to `Sort()` with the non-empty partition having the same content as the original array.
+
+Partitioning is done along the lines of [Hoare's scheme](https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme), as it turns out. However, values are not treated in place, but copied to a separate array and later even extracted into separate partition arrays.
+
+That's a working solution faithful to the Quicksort definition, but it's not memory efficient. I know.
+
+Memory-efficiency (and CPU-efficiency beyond the Quicksort approach) are matters of optimization which now can be done that the algorithm has been implemented.
 
 
 
