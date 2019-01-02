@@ -37,19 +37,10 @@ namespace sorting
             var expectedValues = new[]{3,4};
             var expectedEndOfLessThanPartition = 0;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-
-            // both loops will stop at the pivot at latest
-            while(values[iLargerThan] <= pivot) iLargerThan++;
-            while(values[iLessThan] > pivot) iLessThan--;
-
-            var t = values[iLargerThan];
-            values[iLargerThan] = values[iLessThan];
-            values[iLessThan] = t;
+            var iEndOfPartition = Partition(values, pivot);
 
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
 
         [Fact]
@@ -61,21 +52,10 @@ namespace sorting
             var expectedValues = new[]{3,4};
             var expectedEndOfLessThanPartition = 0;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-
-            // both loops will stop at the pivot at latest
-            while(values[iLargerThan] <= pivot) iLargerThan++;
-            while(values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
+            var iEndOfPartition = Partition(values, pivot);
 
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
 
         [Fact]
@@ -86,29 +66,10 @@ namespace sorting
             var expectedValues = new[]{2,3,4};
             var expectedEndOfLessThanPartition = 1;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-
-            while(values[iLargerThan] <= pivot) iLargerThan++;
-            while(values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
-
-            while(values[iLargerThan] <= pivot) iLargerThan++;
-            while(values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
+            var iEndOfPartition = Partition(values, pivot);
 
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
 
         [Fact]
@@ -119,29 +80,10 @@ namespace sorting
             var expectedValues = new[]{2,3,4};
             var expectedEndOfLessThanPartition = 1;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-
-            while(values[iLargerThan] <= pivot) iLargerThan++;
-            while(values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
-
-            while(values[iLargerThan] <= pivot) iLargerThan++;
-            while(values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
+            var iEndOfPartition = Partition(values, pivot);
 
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
 
         [Fact]
@@ -152,15 +94,10 @@ namespace sorting
             var expectedValues = new[]{2,3,1};
             var expectedEndOfLessThanPartition = 2;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
+            var iEndOfPartition = Partition(values, pivot);
 
-            while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
-            while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
-
-            Assert.False(iLargerThan<iLessThan);
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
 
         [Fact]
@@ -171,29 +108,10 @@ namespace sorting
             var expectedValues = new[]{1,3,2};
             var expectedEndOfLessThanPartition = 0;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-
-            while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
-            while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
-
-            while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
-            while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
-
-            if (iLargerThan<iLessThan) {
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
+            var iEndOfPartition = Partition(values, pivot);
 
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
         
 
@@ -205,20 +123,10 @@ namespace sorting
             var expectedValues = new[]{3,1,4,5,7,8};
             var expectedEndOfLessThanPartition = 3;
 
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-            while(true) {
-                while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
-                while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
-                if (iLargerThan>=iLessThan) break;
-
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
+            var iEndOfPartition = Partition(values, pivot);
 
             Assert.Equal(expectedValues, values);
-            Assert.Equal(expectedEndOfLessThanPartition, iLargerThan-1);
+            Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
 
         [Fact]
