@@ -33,27 +33,13 @@ namespace sorting
         [InlineData(new[]{4,3}, 4, new[]{4,3}, 1)]
         [InlineData(new[]{3,7,4,5,1,5,8}, 5, new[]{3,5,4,5,1,7,8}, 4)]
         public void In_place_partitioning(int[] values, int pivot, int[] expectedValues, int expectedEndOfLessThanPartition) {
-            var iEndOfPartition = Partition(values, pivot);
+            var iEndOfPartition = Partition(values, 0, values.Length-1, pivot);
 
             Assert.Equal(expectedValues, values);
             Assert.Equal(expectedEndOfLessThanPartition, iEndOfPartition);
         }
         
 
-        private int Partition(int[] values, int pivot) {
-            var iLargerThan = 0;
-            var iLessThan = values.Length-1;
-            while(true) {
-                while(iLargerThan < values.Length && values[iLargerThan] <= pivot) iLargerThan++;
-                while(iLessThan >= 0 && values[iLessThan] > pivot) iLessThan--;
-                if (iLargerThan>=iLessThan) break;
-
-                var t = values[iLargerThan];
-                values[iLargerThan] = values[iLessThan];
-                values[iLessThan] = t;
-            }
-            return iLargerThan-1;
-        }
 
         public int[] Sort(int[] values) {
             if (values.Length < 2) return values;
@@ -74,10 +60,33 @@ namespace sorting
                 return PartitionWithPivot(values, pivot);
             }
         }
+/*
+        private int Sort(int[] values, int iStartOfPartition, int iEndOfPartition) {
+            if (iEndOfPartition-iStartOfPartition < 2) return 0;
 
+            var pivot = PickPivot(values, iStartOfPartition, iEndOfPartition);
+
+            var iEndOfLessThanPartition = 
+        }
+*/
         private int PickPivot(int[] values) {
             var iPivot = values.Length == 1 ? 0 : values.Length / 2;
             return values[iPivot];
+        }
+
+        private int Partition(int[] values, int iStartOfPartition, int iEndOfPartition, int pivot) {
+            var iLargerThan = iStartOfPartition;
+            var iLessThan = iEndOfPartition;
+            while(true) {
+                while(iLargerThan <= iEndOfPartition && values[iLargerThan] <= pivot) iLargerThan++;
+                while(iLessThan >= iStartOfPartition && values[iLessThan] > pivot) iLessThan--;
+                if (iLargerThan>=iLessThan) break;
+
+                var t = values[iLargerThan];
+                values[iLargerThan] = values[iLessThan];
+                values[iLessThan] = t;
+            }
+            return iLargerThan-1;
         }
 
         private (int[] lessThan, int[] equalTo, int[] largerThan) PartitionWithPivot(int[] values, int pivot) {
