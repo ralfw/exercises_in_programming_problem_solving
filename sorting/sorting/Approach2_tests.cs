@@ -32,16 +32,21 @@ namespace sorting
         public int[] Sort(int[] values) {
             if (values.Length < 2) return values;
 
-            var pivot = PickPivot(values);
-            var partitions = Partition(values, pivot);
-
+            var partitions = Partition();
+            
             var sortedLessThan = Sort(partitions.lessThan);
             var sortedLargerThan = Sort(partitions.largerThan);
 
-            return sortedLessThan
+            return          sortedLessThan
                     .Concat(partitions.equalTo)
                     .Concat(sortedLargerThan)
                     .ToArray();
+
+
+            (int[] lessThan, int[] equalTo, int[] largerThan) Partition() {
+                var pivot = PickPivot(values);
+                return PartitionWithPivot(values, pivot);
+            }
         }
 
         private int PickPivot(int[] values) {
@@ -49,7 +54,7 @@ namespace sorting
             return values[iPivot];
         }
 
-        private (int[] lessThan, int[] equalTo, int[] largerThan) Partition(int[] values, int pivot) {
+        private (int[] lessThan, int[] equalTo, int[] largerThan) PartitionWithPivot(int[] values, int pivot) {
             var result = new int[values.Length];
             var iLower = 0;
             var iUpper = result.Length - 1;
