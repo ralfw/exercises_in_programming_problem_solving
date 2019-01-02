@@ -74,9 +74,19 @@ namespace sorting
         }
         
         
-        public int[] Sort(int[] values)
-        {
-            throw new NotImplementedException();
+        public int[] Sort(int[] values) {
+            if (values.Length < 2) return values;
+
+            var pivot = PickPivot(values);
+            var partitions = Partition(values, pivot);
+
+            var sortedLessThan = Sort(partitions.lessThan);
+            var sortedLargerThan = Sort(partitions.largerThan);
+
+            return sortedLessThan
+                    .Concat(partitions.equalTo)
+                    .Concat(sortedLargerThan)
+                    .ToArray();
         }
 
         
