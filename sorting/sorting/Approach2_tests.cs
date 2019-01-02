@@ -61,7 +61,7 @@ namespace sorting
             Assert.Equal(expectedLessThanLen, result.lessThan.Length);
             Assert.True(result.lessThan.All(v => v < pivot));
             
-            Assert.Equal(expectedLessThanLen, result.equalTo.Length);
+            Assert.Equal(expectedEqualToLen, result.equalTo.Length);
             Assert.True(result.equalTo.All(v => v == pivot));
             
             Assert.Equal(expectedLargerThanLen, result.largerThan.Length);
@@ -86,14 +86,14 @@ namespace sorting
             var iUpper = result.Length - 1;
             
             foreach (var t in values)
-                if (t <= pivot)
+                if (t < pivot)
                     result[iLower++] = t;
-                else
+                else if (t > pivot)
                     result[iUpper--] = t;
 
             return (result.Take(iLower).ToArray(),
-                    new int[0],
-                    result.Skip(iLower).ToArray());
+                    Enumerable.Range(1,iUpper-iLower+1).Select(_ => pivot).ToArray(),
+                    result.Skip(iUpper+1).ToArray());
         }
     }
 }
