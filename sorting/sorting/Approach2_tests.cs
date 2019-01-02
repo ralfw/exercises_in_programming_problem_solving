@@ -18,17 +18,6 @@ namespace sorting
             Assert.NotSame(result, values);
         }
 
-        [Theory]
-        [InlineData(new[]{1}, new[]{1})]
-        [InlineData(new[]{2,1}, new[]{1,2})]
-        [InlineData(new[]{3,2,1}, new[]{1,2,3})]
-        [InlineData(new[]{3,2,1,0}, new[]{0,1,2,3})]
-        public void Acceptance_tests(int[] values, int[] expected)
-        {
-            var result = Sort(values);
-            Assert.Equal(expected, result);
-        }
-
 
         [Fact]
         public void Acceptance_test_case_2()
@@ -37,41 +26,7 @@ namespace sorting
             var result = Sort(values);
             Assert.Empty(result);
         }
-
-
-        [Theory]
-        [InlineData(new[]{4}, 4)]
-        [InlineData(new[]{4,3}, 3)]
-        [InlineData(new[]{4,3,2}, 3)]
-        [InlineData(new[]{4,3,2,1}, 2)]
-        [InlineData(new[]{4,3,2,1,0}, 2)]
-        public void Pick_pivot_tests(int[] values, int expected)
-        {
-            var result = PickPivot(values);
-            Assert.Equal(expected, result);
-        }
-
-
-        [Theory]
-        [InlineData(new[]{4}, 4, 0, 1, 0)]
-        [InlineData(new[]{4,4}, 4, 0, 2, 0)]
-        [InlineData(new[]{5,4}, 4, 0, 1, 1)]
-        [InlineData(new[]{4,2}, 4, 1, 1, 0)]
-        [InlineData(new[]{5,4,2}, 4, 1, 1, 1)]
-        [InlineData(new[]{6,4,3,7,2,4,5}, 4, 2, 2, 3)]
-        public void Partiton_tests(int[] values, int pivot, int expectedLessThanLen, int expectedEqualToLen, int expectedLargerThanLen)
-        {
-            var result = Partition(values, pivot);
-            
-            Assert.Equal(expectedLessThanLen, result.lessThan.Length);
-            Assert.True(result.lessThan.All(v => v < pivot));
-            
-            Assert.Equal(expectedEqualToLen, result.equalTo.Length);
-            Assert.True(result.equalTo.All(v => v == pivot));
-            
-            Assert.Equal(expectedLargerThanLen, result.largerThan.Length);
-            Assert.True(result.largerThan.All(v => v > pivot));
-        }
+        
         
         
         public int[] Sort(int[] values) {
@@ -89,7 +44,6 @@ namespace sorting
                     .ToArray();
         }
 
-        
         private int PickPivot(int[] values) {
             var iPivot = values.Length == 1 ? 0 : values.Length / 2;
             return values[iPivot];
