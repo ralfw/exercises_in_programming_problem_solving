@@ -40,37 +40,27 @@ namespace sorting
         }
         
 
-
         public int[] Sort(int[] values) {
-            if (values.Length < 2) return values;
-
-            var partitions = Partition();
-            
-            var sortedLessThan = Sort(partitions.lessThan);
-            var sortedLargerThan = Sort(partitions.largerThan);
-
-            return          sortedLessThan
-                    .Concat(partitions.equalTo)
-                    .Concat(sortedLargerThan)
-                    .ToArray();
-
-
-            (int[] lessThan, int[] equalTo, int[] largerThan) Partition() {
-                var pivot = PickPivot(values);
-                return PartitionWithPivot(values, pivot);
-            }
+            var result = (int[])values.Clone();
+            Sort(result, 0, result.Length-1);
+            return result;
         }
-/*
-        private int Sort(int[] values, int iStartOfPartition, int iEndOfPartition) {
-            if (iEndOfPartition-iStartOfPartition < 2) return 0;
+
+        private void Sort(int[] values, int iStartOfPartition, int iEndOfPartition) {
+            var lengthOfPartition = iEndOfPartition - iStartOfPartition + 1;
+            if (lengthOfPartition < 2) return;
 
             var pivot = PickPivot(values, iStartOfPartition, iEndOfPartition);
+            var iEndOfLowerPartition = Partition(values, iStartOfPartition, iEndOfPartition, pivot);
+            Console.WriteLine($"{iStartOfPartition}-{iEndOfPartition} / {pivot} / {iEndOfLowerPartition}");
 
-            var iEndOfLessThanPartition = 
+            Sort(values, iStartOfPartition, iEndOfLowerPartition);
+            Sort(values, iEndOfLowerPartition+1, iEndOfPartition);
         }
-*/
-        private int PickPivot(int[] values) {
-            var iPivot = values.Length == 1 ? 0 : values.Length / 2;
+
+        private int PickPivot(int[] values, int iStartOfPartition, int iEndOfPartition) {
+            var lengthOfPartition = iEndOfPartition - iStartOfPartition + 1;
+            var iPivot = lengthOfPartition == 1 ? 0 : lengthOfPartition / 2;
             return values[iPivot];
         }
 
@@ -87,24 +77,6 @@ namespace sorting
                 values[iLessThan] = t;
             }
             return iLargerThan-1;
-        }
-
-        private (int[] lessThan, int[] equalTo, int[] largerThan) PartitionWithPivot(int[] values, int pivot) {
-            var result = new int[values.Length];
-            var iLower = 0;
-            var iUpper = result.Length - 1;
-            
-            foreach (var t in values)
-                if (t < pivot)
-                    result[iLower++] = t;
-                else if (t > pivot)
-                    result[iUpper--] = t;
-
-            var lessThanPartition = result.Take(iLower).ToArray();
-            var pivotPartition = Enumerable.Range(1, iUpper - iLower + 1).Select(_ => pivot).ToArray();
-            var largerThanPartition = result.Skip(iUpper + 1).ToArray();
-            
-            return (lessThanPartition,pivotPartition,largerThanPartition);
         }
     }
 }
