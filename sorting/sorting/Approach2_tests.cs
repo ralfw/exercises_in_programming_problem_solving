@@ -56,6 +56,7 @@ namespace sorting
         [InlineData(new[]{4}, 4, 0, 1, 0)]
         [InlineData(new[]{4,4}, 4, 0, 2, 0)]
         [InlineData(new[]{5,4}, 4, 0, 1, 1)]
+        [InlineData(new[]{4,2}, 4, 1, 1, 0)]
         public void Partiton_tests(int[] values, int pivot, int expectedLessThanLen, int expectedEqualToLen, int expectedLargerThanLen)
         {
             var result = Partition(values, pivot);
