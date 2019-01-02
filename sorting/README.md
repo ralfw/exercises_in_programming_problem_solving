@@ -78,7 +78,7 @@ Test cases for the pivot picking function `int PickPivot(int[] values)`
 * `[4,3,2]` -> `3`
 
 #### Partitioning
-Partitioning rearranges the values in a array with regard to a pivot. Values less than the pivot are moved to the left, values larger are moved to the right.
+Partitioning rearranges the values in a array with regard to a pivot. Values less than the pivot are moved to the left of the pivot, values larger are moved to the right.
 
 Example: `[6,3,7,2,4,5]` with pivot `4` results (for example) in `[3,2,4,6,7,5]`.
 
@@ -86,67 +86,35 @@ The order of the values to the left and right of the pivot is not important, tho
 
 The pivot always is a value in the array.
 
-Test cases for the partitioning function `int[] Partition(int[] values, int pivot)`
+Partitioning seemingly creates two partitions. But when looking more closely it's in fact three partitions: values less, values larger than the pivot, and the pivot itself! The first two partitions might be empty; the pivot partition might contain several elements.
 
-* `[4], 4` -> `[4]`
-* `[3,4], 4` -> `[3,4]`
+A function creating these partitions can look like this:
 
-After these test cases what's the next slightly more difficult one? Is it
+`(int[] lessThan, int[] equalTo, int[] largerThan) Partition(int[] values, int pivot)`
 
-a. `[4,3], 4` -> `[3,4]`
+Test cases:
 
-or
-
-b. `[3,4,5], 4` -> `[3,4,5]`
-
-This depends on the solution approach:
-
-Only a single pass over the array should be necessary in any case.
-
-* A value at i is compared to the pivot.
-* If it's less or equal it's put in the left partition; else it's put in the right partition.
-* Both partitions grow from the edges towards the center of the array.
-
-With this in mind the next test case should be:
-
-`[4,3], 4` -> `[3,4]`
-
-It only requires an addition to the left partition. And then
-
-`[3,4,5], 4` -> `[3,4,5]`
-
-which is equivalent to
-
-`[5,4,3], 4` -> `[3,4,5]`
-
-At least if taken seriously.
+* `[4], 4` -> `([], [4], [])`
+* `[4,4], 4` -> `([], [4,4], [])`
+* `[5,4], 4` -> `([], [4], [5])`
+* `[4,2], 4` -> `([2], [4], [])`
+* `[5,4,2], 4` -> `([2], [4], [5])`
+* `[6,4,3,7,2,4,5], 4` -> `([3,2],[4,4],[6,7,5])`
  
 #### Descending
-Descending means partitioning is repeated on the partitions of an array (recursion!).
+Descending means to apply pivot picking and partitioning recursively to the partitions with the values less than and larger than the pivot.
 
-If `[3,2,4,6,7,5]` is partitioned around pivot `4`, then the whole process descends down into `[3,2,4]` and `[6,7,5]`.
+The return value of such application is a sorted array which then needs to be joined with the other arrays.
 
-And then again down into `[2]/[3,4]` and `[6,5]/[7]`.
+Given these partitions
 
-Arrays of length <= 2 don't have to be descended into, though, after they have been through partitioning.
+`[3,2],[4,4],[6,7,5]`
 
-At the core of descending is separating the partitions, e.g.
+will lead to the sorted arrays `[2,3]` and `[5,6,7]` and the result
 
-* `[3,4,2,6,7,5], 4` -> `[3,4,2], [6,7,5]`
+`[2,3] + [4,4] + [5,6,7]` -> `[2,3,4,4,5,6,7]`
 
-The function signature for this:
-
-`(int[] lower, int[] upper) SeparatePartitions(int[] values, int pivot)`
-
-Alternatively the partitioning phase could deliver the partitions right away:
-
-`(int[] lower, int[] upper) Partition(int[] values, int pivot)`
-
-Descending then mainly is picking the pivot and partitoning for each partition in turn - and finally appending the results during ascension:
-
-* `[2]`+`[3,4]` -> `[2,3,4]` and `[5,6]` + `[7]` -> `[5,6,7]`
-* `[2,3,4]` + `[5,6,7]` -> `[2,3,4,5,6,7]`
-
+Descending is what's done in the function to produce: `Sort()
 
 
 
