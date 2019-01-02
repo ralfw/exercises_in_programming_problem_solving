@@ -96,9 +96,11 @@ namespace sorting
                 else if (t > pivot)
                     result[iUpper--] = t;
 
-            return (result.Take(iLower).ToArray(),
-                    Enumerable.Range(1,iUpper-iLower+1).Select(_ => pivot).ToArray(),
-                    result.Skip(iUpper+1).ToArray());
+            var lessThanPartition = result.Take(iLower).ToArray();
+            var pivotPartition = Enumerable.Range(1, iUpper - iLower + 1).Select(_ => pivot).ToArray();
+            var largerThanPartition = result.Skip(iUpper + 1).ToArray();
+            
+            return (lessThanPartition,pivotPartition,largerThanPartition);
         }
     }
 }
