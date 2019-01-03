@@ -46,8 +46,7 @@ namespace sorting
                 The pivot value is the value right in the middle of a slice.
                 For a discussion on picking a pivot see: https://en.wikipedia.org/wiki/Quicksort#Choice_of_pivot
             */
-            var lengthOfSlice = iEndOfSlice - iStartOfSlice + 1;
-            var iPivot = iStartOfSlice + (lengthOfSlice == 1 ? 0 : lengthOfSlice / 2);
+            var iPivot = (iStartOfSlice + iEndOfSlice) / 2;
             return values[iPivot];
         }
 
