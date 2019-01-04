@@ -10,20 +10,28 @@ namespace from_roman
         [Theory]
         [InlineData("MCMLXXXIV", 1984)]
         [InlineData("MCDXCII", 1492)]
-        public void Acceptance_tests(string roman, int expectedDecimal)
+        public void Acceptance_tests(string roman, int expected)
         {
             var result = FromRoman(roman);
-            Assert.Equal(expectedDecimal, result);
+            Assert.Equal(expected, result);
         }
         
         [Theory]
         [InlineData("I", new[] {1})]
         [InlineData("V", new[] {5})]
         [InlineData("IVXLCDM", new[] {1,5,10,50,100,500,1000})]
-        public void Parse_tests(string roman, int[] expectedValues)
+        public void Parse_tests(string roman, int[] expected)
         {
             var result = Parse(roman);
-            Assert.Equal(expectedValues, result);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(new[] {10,1}, new[] {10,1})]
+        public void AdjustForSubtractionRule_test(int[] values, int[] expected)
+        {
+            var result = AdjustForSubtractionRule(values);
+            Assert.Equal(expected, result);
         }
         
         
@@ -53,7 +61,7 @@ namespace from_roman
 
         private IEnumerable<int> AdjustForSubtractionRule(IEnumerable<int> values)
         {
-            throw new NotImplementedException();
+            return values;
         }
     }
 }
