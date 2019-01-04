@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Xunit;
 
 namespace from_roman
@@ -32,6 +33,7 @@ namespace from_roman
 
         [Theory]
         [InlineData("II", 2)]
+        [InlineData("XVI", 16)]
         public void Convert_several_digits_without_subtraction_rule(string roman, int expectedDecimal)
         {
             var result = FromRoman(roman);
@@ -41,9 +43,7 @@ namespace from_roman
         
         private int FromRoman(string roman)
         {
-            var sum = MapDigit(roman[0]);
-            if (roman.Length>1) sum += MapDigit(roman[1]);
-            return sum;
+            return roman.Select(MapDigit).Sum();
             
             int MapDigit(char digit) {
                 switch (digit) {
