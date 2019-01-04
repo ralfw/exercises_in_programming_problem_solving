@@ -18,6 +18,18 @@ namespace from_roman
         
         
         private int FromRoman(string roman) {
+            var tokens = Tokenize(roman);
+            var values = Map(tokens);
+            return values.Sum();
+        }
+
+        private IEnumerable<string> Tokenize(string roman)
+        {
+            throw new NotImplementedException();
+        }
+        
+        private IEnumerable<int> Map(IEnumerable<string> tokens)
+        {
             throw new NotImplementedException();
         }
     }
