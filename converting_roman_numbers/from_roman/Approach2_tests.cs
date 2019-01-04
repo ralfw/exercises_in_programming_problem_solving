@@ -43,16 +43,11 @@ namespace from_roman
 
         private int[] AdjustForSubtractionRule(int[] values)
         {
-            var adjuestedValues = new List<int>();
+            var adjuestedValues = (int[])values.Clone();
             
-            var value = values.First();
-            foreach (var nextValue in values.Skip(1)) {
-                if (value < nextValue) value = -value;
-                adjuestedValues.Add(value);
-
-                value = nextValue;
-            }
-            adjuestedValues.Add(value);
+            for(var i=0; i < adjuestedValues.Length - 1; i++)
+                if (adjuestedValues[i] < adjuestedValues[i + 1])
+                    adjuestedValues[i] *= -1;
 
             return adjuestedValues.ToArray();
         }
