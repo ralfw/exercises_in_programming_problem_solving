@@ -22,6 +22,7 @@ namespace from_roman
         [InlineData("I", new[]{"I"})]
         [InlineData("XVI", new[]{"X","V","I"})]
         [InlineData("IV", new[]{"IV"})]
+        [InlineData("MCDXXIV", new[]{"M", "CD", "X", "X", "IV"})]
         public void Tokenize_tests(string roman, string[] expected) {
             var result = Tokenize(roman);
             Assert.Equal(expected, result.ToArray());
@@ -46,7 +47,9 @@ namespace from_roman
             string GetNext() {
                 if (i == roman.Length - 1) return roman[i].ToString();
 
-                if (roman[i] == 'I' && roman[i + 1] == 'V')
+                if (roman[i] == 'I' && (roman[i + 1] == 'V' || roman[i + 1] == 'X') ||
+                    roman[i] == 'X' && (roman[i + 1] == 'L' || roman[i + 1] == 'C') ||
+                    roman[i] == 'C' && (roman[i + 1] == 'D' || roman[i + 1] == 'M'))
                     return roman.Substring(i, 2);
                 
                 return roman[i].ToString();
