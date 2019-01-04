@@ -23,9 +23,9 @@ namespace from_roman
             return values.Sum();
         }
 
-        private IEnumerable<int> Parse(string roman)
+        private int[] Parse(string roman)
         {
-            return roman.Select(MapDigit);
+            return roman.Select(MapDigit).ToArray();
             
             int MapDigit(char digit) {
                 switch (digit) {
@@ -41,7 +41,7 @@ namespace from_roman
             }
         }
 
-        private IEnumerable<int> AdjustForSubtractionRule(IEnumerable<int> values)
+        private int[] AdjustForSubtractionRule(int[] values)
         {
             var adjuestedValues = new List<int>();
             
@@ -53,8 +53,8 @@ namespace from_roman
                 value = nextValue;
             }
             adjuestedValues.Add(value);
-            
-            return adjuestedValues;
+
+            return adjuestedValues.ToArray();
         }
     }
 }
