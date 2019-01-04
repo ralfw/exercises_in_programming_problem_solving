@@ -44,6 +44,11 @@ namespace from_roman
             }
 
             string GetNext() {
+                if (i == roman.Length - 1) return roman[i].ToString();
+
+                if (roman[i] == 'I' && roman[i + 1] == 'V')
+                    return roman.Substring(i, 2);
+                
                 return roman[i].ToString();
             }
         }
