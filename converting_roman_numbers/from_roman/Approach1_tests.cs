@@ -17,6 +17,7 @@ namespace from_roman
 
         [Theory]
         [InlineData("I", 1)]
+        [InlineData("V", 5)]
         public void Convert_single_digit(string roman, int expectedDecimal)
         {
             var result = FromRoman(roman);
@@ -26,7 +27,9 @@ namespace from_roman
         
         private int FromRoman(string roman)
         {
-            return 1;
+            if (roman == "I") return 1;
+            if (roman == "V") return 5;
+            throw new InvalidOperationException();
         }
     }
 }
