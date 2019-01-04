@@ -41,8 +41,7 @@ namespace from_roman
             }
         }
 
-        private int[] AdjustForSubtractionRule(int[] values)
-        {
+        private int[] AdjustForSubtractionRule(int[] values) {
             var adjuestedValues = (int[])values.Clone();
             
             for(var i=0; i < adjuestedValues.Length - 1; i++)
