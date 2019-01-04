@@ -16,27 +16,6 @@ namespace from_roman
             Assert.Equal(expected, result);
         }
         
-        [Theory]
-        [InlineData("I", new[] {1})]
-        [InlineData("V", new[] {5})]
-        [InlineData("IVXLCDM", new[] {1,5,10,50,100,500,1000})]
-        public void Parse_tests(string roman, int[] expected)
-        {
-            var result = Parse(roman);
-            Assert.Equal(expected, result);
-        }
-
-        [Theory]
-        [InlineData(new[] {10,1}, new[] {10,1})]
-        [InlineData(new[] {1,10}, new[] {-1,10})]
-        [InlineData(new[] {1}, new[] {1})]
-        [InlineData(new[] {1,5,10}, new[] {-1,-5,10})]
-        public void AdjustForSubtractionRule_test(int[] values, int[] expected)
-        {
-            var result = AdjustForSubtractionRule(values);
-            Assert.Equal(expected, result);
-        }
-        
         
         private int FromRoman(string roman) {
             var values = Parse(roman);
