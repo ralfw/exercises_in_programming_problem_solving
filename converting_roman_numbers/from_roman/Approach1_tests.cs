@@ -14,10 +14,19 @@ namespace from_roman
             Assert.Equal(expectedDecimal, result);
         }
 
+
+        [Theory]
+        [InlineData("I", 1)]
+        public void Convert_single_digit(string roman, int expectedDecimal)
+        {
+            var result = FromRoman(roman);
+            Assert.Equal(expectedDecimal, result);
+        }
+
         
         private int FromRoman(string roman)
         {
-            throw new NotImplementedException();
+            return 1;
         }
     }
 }
