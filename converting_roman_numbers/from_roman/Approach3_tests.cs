@@ -27,6 +27,16 @@ namespace from_roman
             var result = Tokenize(roman);
             Assert.Equal(expected, result.ToArray());
         }
+
+
+        [Theory]
+        [InlineData(new[] {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"},
+            new[] {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1})]
+        public void Map_tests(string[] tokens, int[] expected)
+        {
+            var result = Map(tokens);
+            Assert.Equal(expected, result);
+        }
         
         
         private int FromRoman(string roman) {
@@ -56,9 +66,15 @@ namespace from_roman
             }
         }
         
-        private IEnumerable<int> Map(IEnumerable<string> tokens)
-        {
-            throw new NotImplementedException();
-        }
+        private readonly Dictionary<string,int> _map = new Dictionary<string, int>() {
+            {"M", 1000}, {"CM", 900 },
+            {"D", 500}, {"CD", 400 },
+            {"C", 100}, {"XC", 90 },
+            {"L", 50}, {"XL", 40 },
+            {"X", 10}, {"IX", 9 },
+            {"V", 5}, {"IV", 4 },
+            {"I", 1}
+        };
+        private IEnumerable<int> Map(IEnumerable<string> tokens) => tokens.Select(t => _map[t]);
     }
 }
