@@ -29,17 +29,33 @@ namespace from_roman
             Assert.Equal(expectedDecimal, result);
         }
 
+
+        [Theory]
+        [InlineData("II", 2)]
+        public void Convert_several_digits_without_subtraction_rule(string roman, int expectedDecimal)
+        {
+            var result = FromRoman(roman);
+            Assert.Equal(expectedDecimal, result);
+        }
+
         
-        private int FromRoman(string roman) {
-            switch (roman) {
-                case "I": return 1;
-                case "V" : return 5;
-                case "X": return 10;
-                case "L": return 50;
-                case "C": return 100;
-                case "D": return 500;
-                case "M": return 1000;
-                default: throw new InvalidOperationException();
+        private int FromRoman(string roman)
+        {
+            var sum = MapDigit(roman[0]);
+            if (roman.Length>1) sum += MapDigit(roman[1]);
+            return sum;
+            
+            int MapDigit(char digit) {
+                switch (digit) {
+                    case 'I': return 1;
+                    case 'V' : return 5;
+                    case 'X': return 10;
+                    case 'L': return 50;
+                    case 'C': return 100;
+                    case 'D': return 500;
+                    case 'M': return 1000;
+                    default: throw new InvalidOperationException();
+                }
             }
         }
     }
