@@ -29,6 +29,7 @@ namespace from_roman
         [Theory]
         [InlineData(new[] {10,1}, new[] {10,1})]
         [InlineData(new[] {1,10}, new[] {-1,10})]
+        [InlineData(new[] {1}, new[] {1})]
         public void AdjustForSubtractionRule_test(int[] values, int[] expected)
         {
             var result = AdjustForSubtractionRule(values);
@@ -63,7 +64,9 @@ namespace from_roman
         private IEnumerable<int> AdjustForSubtractionRule(IEnumerable<int> values)
         {
             var value = values.First();
-            var nextValue = values.Skip(1).First();
+            var nextValue = values.Skip(1).FirstOrDefault();
+            if (nextValue == 0) return new[] {value};
+            
             if (value < nextValue) value = -value;
             return new[] {value, nextValue};
         }
