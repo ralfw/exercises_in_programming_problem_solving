@@ -20,6 +20,7 @@ namespace from_roman
 
         [Theory]
         [InlineData("I", new[]{"I"})]
+        [InlineData("XVI", new[]{"X","V","I"})]
         public void Tokenize_tests(string roman, string[] expected) {
             var result = Tokenize(roman);
             Assert.Equal(expected, result);
@@ -34,7 +35,7 @@ namespace from_roman
 
         private IEnumerable<string> Tokenize(string roman)
         {
-            return new[] {roman};
+            return roman.ToCharArray().Select(c => c.ToString());
         }
         
         private IEnumerable<int> Map(IEnumerable<string> tokens)
