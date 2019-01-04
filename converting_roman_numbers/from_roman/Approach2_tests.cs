@@ -16,6 +16,14 @@ namespace from_roman
             Assert.Equal(expectedDecimal, result);
         }
         
+        [Theory]
+        [InlineData("I", new[] {1})]
+        public void Parse_tests(string roman, int[] expectedValues)
+        {
+            var result = Parse(roman);
+            Assert.Equal(expectedValues, result);
+        }
+        
         
         private int FromRoman(string roman) {
             var values = Parse(roman);
@@ -25,7 +33,7 @@ namespace from_roman
 
         private IEnumerable<int> Parse(string roman)
         {
-            throw new NotImplementedException();
+            return new[] {1};
         }
 
         private IEnumerable<int> AdjustForSubtractionRule(IEnumerable<int> values)
