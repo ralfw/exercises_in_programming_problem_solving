@@ -15,10 +15,20 @@ namespace from_roman
             var result = FromRoman(roman);
             Assert.Equal(expectedDecimal, result);
         }
-
-
         
-        private int FromRoman(string roman)
+        
+        private int FromRoman(string roman) {
+            var values = Parse(roman);
+            values = AdjustForSubtractionRule(values);
+            return values.Sum();
+        }
+
+        private IEnumerable<int> Parse(string roman)
+        {
+            throw new NotImplementedException();
+        }
+
+        private IEnumerable<int> AdjustForSubtractionRule(IEnumerable<int> values)
         {
             throw new NotImplementedException();
         }
