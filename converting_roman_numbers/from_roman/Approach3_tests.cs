@@ -17,27 +17,6 @@ namespace from_roman
         }
 
 
-
-        [Theory]
-        [InlineData("I", new[]{"I"})]
-        [InlineData("XVI", new[]{"X","V","I"})]
-        [InlineData("IV", new[]{"IV"})]
-        [InlineData("MCDXXIV", new[]{"M", "CD", "X", "X", "IV"})]
-        public void Tokenize_tests(string roman, string[] expected) {
-            var result = Tokenize(roman);
-            Assert.Equal(expected, result.ToArray());
-        }
-
-
-        [Theory]
-        [InlineData(new[] {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"},
-            new[] {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1})]
-        public void Map_tests(string[] tokens, int[] expected)
-        {
-            var result = Map(tokens);
-            Assert.Equal(expected, result);
-        }
-        
         
         private int FromRoman(string roman) {
             var tokens = Tokenize(roman);
@@ -45,8 +24,7 @@ namespace from_roman
             return values.Sum();
         }
 
-        private IEnumerable<string> Tokenize(string roman)
-        {
+        private IEnumerable<string> Tokenize(string roman) {
             var i = 0;
             while (i < roman.Length) {
                 var token = GetNext();
@@ -66,7 +44,7 @@ namespace from_roman
             }
         }
         
-        private readonly Dictionary<string,int> _map = new Dictionary<string, int>() {
+        private readonly Dictionary<string,int> _map = new Dictionary<string, int> {
             {"M", 1000}, {"CM", 900 },
             {"D", 500}, {"CD", 400 },
             {"C", 100}, {"XC", 90 },
