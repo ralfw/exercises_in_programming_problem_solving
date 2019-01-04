@@ -19,6 +19,7 @@ namespace from_roman
         [Theory]
         [InlineData("I", new[] {1})]
         [InlineData("V", new[] {5})]
+        [InlineData("IVXLCDM", new[] {1,5,10,50,100,500,1000})]
         public void Parse_tests(string roman, int[] expectedValues)
         {
             var result = Parse(roman);
@@ -34,7 +35,7 @@ namespace from_roman
 
         private IEnumerable<int> Parse(string roman)
         {
-            return new[] {MapDigit(roman[0])};
+            return roman.Select(MapDigit);
             
             int MapDigit(char digit) {
                 switch (digit) {
