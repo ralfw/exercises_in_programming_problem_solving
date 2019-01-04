@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -39,11 +40,31 @@ namespace from_roman
             var result = FromRoman(roman);
             Assert.Equal(expectedDecimal, result);
         }
+        
+        
+        [Theory]
+        [InlineData("IV", 4)]
+        public void Convert_several_digits_with_subtraction_rule(string roman, int expectedDecimal)
+        {
+            var result = FromRoman(roman);
+            Assert.Equal(expectedDecimal, result);
+        }
 
         
         private int FromRoman(string roman)
         {
-            return roman.Select(MapDigit).Sum();
+            return roman.Select(MapDigit)
+                        .Aggregate(new List<int>(), AdjustValuesForSubtractionRule)
+                        .Sum();
+
+            
+            List<int> AdjustValuesForSubtractionRule(List<int> values, int nextValue) {
+                if (values.Count > 0 && nextValue > values.Last())
+                    values.Add(values.Last() * -2);
+                values.Add(nextValue);
+
+                return values;
+            }
             
             int MapDigit(char digit) {
                 switch (digit) {
