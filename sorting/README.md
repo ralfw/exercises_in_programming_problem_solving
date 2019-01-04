@@ -138,9 +138,56 @@ That's a working solution faithful to the Quicksort definition, but it's not mem
 
 Memory-efficiency (and CPU-efficiency beyond the Quicksort approach) are matters of optimization which now can be done that the algorithm has been implemented.
 
+#### Optimization
+The value copying did not let me sleep well. I had to make it more efficient.
 
+The solution was to introduce slices, e.g. streches of values in the array to sort, e.g. those from index 4 to 7.
 
+That could have been just a formal change, but since there was not array for the pivot values anymore during partitioning
+I had to change the partitioning algorithm. It now moves the pivot to the center of a partition in 2 passes of
+value seggregation (see code for an explanation).
 
+Unfortunately I forgot to adapt the `PickPivot()` function to properly handle slices. That led to some bug hunting in the wrong
+places. I suspected the partitioning to be the culprit despite quite some testing. It did not occurr to me that the pivot picking
+wasn't working anymore. Bummer :-(
 
+This version should be more memory efficient. But the paritioning now looks a bit bloated.
 
+So far I haven't looked at any Quicksort implementations. But when I do now and compare it to Hoare's solution... then mine
+clearly is less concise, less elegant :-( It does not need two passes to partition properly.
 
+Hm... Why does my code look different? Have I been sloppy in designing test cases? Or did I simply lack a certain spark of creativity?
+
+#### Retrospective II
+Straightforward correct solutions are elusive. Programming is messy.
+
+It did not go well with the `PickPivot()` function. Changing it so fundamentally should have prompted me to rethink testing it.
+Its former scaffolding tests where gone - but why not add at least a couple of new ones? But the change seemed too small to bother.
+How wrong I was...
+
+Lesson no. 1: Changing an operation requires tests to back it. If there are none, then add some.
+
+Lesson no. 2: "TDD as if you meant it" worked nicely for rewriting the partioning. I copied the whole function
+into the test and changed its shape and interior. Only when it worked as expected I moved it into the production
+code (and deleted the former version).
+
+Putting a piece of code onto a workbench like this (instead of leaving it in place in production code) really
+helps focussing (and decoupling parts of code).
+
+Lesson no. 3: I like the use of a continuation to hide the termination condition for the recursion:
+
+```
+Descend(() => {
+    var pivot = PickPivot(values, iStartOfSlice, iEndOfSlice);
+    var partitions = Partition(values, iStartOfSlice, iEndOfSlice, pivot);
+
+    Sort(values, iStartOfSlice, partitions.iEndOfLowerPartition);
+    Sort(values, partitions.iStartOfUpperPartition, iEndOfSlice);
+});
+```
+
+Local functions are great for hiding such details.
+
+Finally I'm happy to have thought of adding some explanations to the code. Mostly that seems to be a burden, but once I started
+with it it felt more like some kind of reflection and a way to reach closure. With some comments in place I'm ready to let go
+of this solution.

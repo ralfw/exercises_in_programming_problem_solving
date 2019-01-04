@@ -58,7 +58,7 @@ namespace sorting
                 -the pivot values
                 This creates a very rough sorting of values: less < pivot < larger
 
-                This achieved by segregating the values twice.
+                This is achieved by segregating the values twice.
                 1. all values less or equal (!) than the pivot vs. all values larger than the pivot
                 2. only the values less than the pivot vs the pivot
 
@@ -74,6 +74,12 @@ namespace sorting
 
 
             int SeggregateValues(int iStart, int iEnd, bool includePivotInLower) {
+                /*
+                    Seggregation works by moving values around within a slice:
+                    Values larger than the pivot are moved from the left of a slice to the right.
+                    And values less than the pivot are moved from the right of a slice to the left.
+                    That's done by finding pairs of values which can swap places.
+                */
                 var iLargerThan = iStart;
                 var iLessThan = iEnd;
 
