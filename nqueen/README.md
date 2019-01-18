@@ -40,7 +40,7 @@ After a queen has been placed on a square not under threat, the next queen of co
 
 There is no rule or restriction other than that on how to place queens. Just do it until either all n queens have been placed - or there are no more _safe_ squares (i.e. squares not threatened).
 
-## Acceptance criteria
+### Acceptance criteria
 The solution will be accepted if the following function has been implemented:
 
 ```
@@ -64,6 +64,15 @@ And the function returns the solutions for n=4 and n=6.
 
 Also, if n<4 no solution will be returned.
 
+## Solution design
+### Finding simpler subproblems
+I don't see a way to simplify the problem except for reducing n from the usual 8 to the minimal 4 for a start. But that does not help making the problem to (initially) solve smaller. Solving it for n=4 requires the same features as for n=6 or n=8 etc.
+
+Of course it would be simpler if a queen would be less threatening, e.g. if she only threatened a row instead of row + column + diagonals. But a test relying on this simplification would not be valid anymore once the queens "power" is increased.
+
+
+
+### Finding complementary subproblems
 
 
 

@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace nqueen {
     class NQueenProblem {
+        private const int MINIMAL_N = 4;
+
         public class Solution {
             public Position[] Queens;
             
@@ -13,6 +15,8 @@ namespace nqueen {
         }
 
         public static Solution[] Solve(int n) {
+            if (n < MINIMAL_N) return new Solution[0];
+
             throw new NotImplementedException();
         }
     }
