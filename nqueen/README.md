@@ -136,6 +136,80 @@ Bottom-up development seems feasible:
 3. `Solve()`
 
 ### Solving the safety check
+Checking a square for safety to me seems at the core of the n-queen problem. I better get this one right.
+
+Can this problem be simplified? Yes, I guess. Instead of solving it for any n x n board I can start with a 3x3 board. All "threat vectors" are present, but their length is fixed and minimal.
+
+![](images/safe1.jpg)
+
+Checking a square for safety means checking for the presence of a queen along the "threat vectors" radiating out from that square. A square is not safe, if a queen which would be placed on it, would threaten another queen.
+
+![](images/safe2.jpg)
+
+Checking for a threatening queen can be understood as "looking around" in different directions:
+
+* Looking up/**north**: same column, rows above
+* Looking down/**south**: same column, rows below
+* Looking left/**west**: same row, columns to the left
+* Looking right/**east**: same row, columns to the right
+* Looking **north-west**: squares on the diagonal to the upper left (first part of descending diagonal)
+* Looking **north-east**: squares on the diagonal to the upper right (second part of ascending diagonal)
+* Looking **south-east**: squares on the diagonal to the lower right (second part of descending diagonal)
+* Looking **south-west**: squares on the diagonal to the lower left (first part of the ascending diagonal)
+
+Starting from the square in question each direction is characterized by a combination of deltas for column and row:
+
+* n(0,-1)
+* s(0,+1)
+* w(-1,0)
+* e(+1,0)
+* nw(-1,-1)
+* ne(+1,-1)
+* se(+1,+1)
+* sw(-1,+1)
+
+![](images/safe3.jpg)
+
+Generation of square coordinates along all vectors then should be basically the same and driven by these deltas. It starts with the candidate position and radiates out from there in the directions defined by the deltas.
+
+Coordinates are generated until either row or column become <0 or >=n.
+
+From the simplified problem a complementary problem has been derived: coordinate generation.
+
+`Position[] GeneratePositions(Position candidatePosition, int n, int deltaColumn, int deltaRow)`
+
+And once all positions along the "threat vectors" of candidate position have been generated, they can be checked against the positions of already placed queens. Should a queen's position be one of the "threat vectors" then the square in question is not safe.
+
+To check that, is a second complementary problem:
+
+`bool CheckThatNoQueensAreThreatened(Position[] threatVectors, Position[] queens)`
+
+The name of this function is important. It should state that it's checked that no queen is threatened along the "threat vectors"; that matched the purpose of the integrating `IsSafe()` function. Naming it instead along the lines of "check if any queen is threatened" would require to invert its result; that would insert logic into `IsSafe()`.
+
+Internally I'm assuming squares to have numeric 0-based coordinates only, e.g. (2,1) for column "c" and row 2. There needs to be a second `Position{}` type for that. Internal positions will then be mapped to "public" positions during creation of the `Solution{}`.
+
+### Visual solution design
+![](images/flow1.jpg)
+![](images/flow2.jpg)
+
+The crucial operations in this flow-design are `GeneratePositions()` and `CheckThatNoQueensAreThreatened()`.
+
+The integrations `IsSafe()` and `PlaceQueen()` should be put under scaffolding test, too, though. To check if my "theory" of all this working together really delivers the desired result, holds true.
+
+#### Classes
+The overall problem is solved by the class `NQueenProblem{}`. Also two data classes have been defined: `Solution{}` and `Position{}`.
+
+Should there be more classes? Can any of the behaviour be offloaded to a data class representing the board? Or should there be a class for the growing (and shrinking) list of queens?
+
+* A board knows about its squares. Row generation could be made a responsibilty of a `Board{}` class.
+* Also generation of "vectors" could be assigned to the board.
+* The list of queens could be made an immutable ADT `Queens{}` which can check if a queen has already been placed on a certain position, and add another queen thereby producing a new instance.
+
+![](images/flow3.jpg)
+
+
+
+
 
 
 
