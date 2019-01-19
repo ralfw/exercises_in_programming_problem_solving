@@ -9,14 +9,16 @@ namespace nqueen
         [Theory]
         [InlineData(4, new[]{"c1a2d3b4", "b1d2a3c4"})]
         [InlineData(6, new[]{"e1c2a3f4d5b6", "d1a2e3b4f5c6", "c1f2b3e4a5d6", "b1d2f3a4c5e6"})]
+        // See here (https://stamm-wilbrandt.de/en/xsl-list/n-queens/n-queens.xsl.xml) for these
+        // an more solutions.
         public void RelevantN(int n, string[] expected)
         {
             var result = NQueenProblem.Solve(n);
 
             Assert.Equal(expected.Length, result.Length);
 
-            var normalizedResult = result.Select(Normalize);
-            Assert.Equal(expected, normalizedResult);
+            var serializedResult = result.Select(Serialize);
+            Assert.Equal(expected, serializedResult);
         }
 
 
@@ -30,20 +32,20 @@ namespace nqueen
 
 
         [Fact]
-        public void Normalize_test() {
-            var sol = new NQueenProblem.Solution();
+        public void Serialize_test() {
+            var sol = new Solution();
             sol.Queens = new[]{
-                new NQueenProblem.Solution.Position(){Col='a', Row=3},
-                new NQueenProblem.Solution.Position(){Col='b', Row=2},
-                new NQueenProblem.Solution.Position(){Col='c', Row=1},
+                new Solution.Position(){Col='a', Row=3},
+                new Solution.Position(){Col='b', Row=2},
+                new Solution.Position(){Col='c', Row=1},
             };
 
-            var result = Normalize(sol);
+            var result = Serialize(sol);
 
             Assert.Equal("c1b2a3", result);
         }
 
-        string Normalize(NQueenProblem.Solution solution)
+        string Serialize(Solution solution)
             => string.Join("", solution.Queens.OrderBy(p => p.Row).Select(p => $"{p.Col}{p.Row}").ToArray());
     }
 }
