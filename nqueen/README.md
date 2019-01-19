@@ -70,10 +70,72 @@ I don't see a way to simplify the problem except for reducing n from the usual 8
 
 Of course it would be simpler if a queen would be less threatening, e.g. if she only threatened a row instead of row + column + diagonals. But a test relying on this simplification would not be valid anymore once the queens "power" is increased.
 
-
+What's left is that n<4 is easier to solve then n>=4. But that's trivial.
 
 ### Finding complementary subproblems
+The overall problem seems to consist of three major complementary subproblems:
 
+* Repeatedly placing a queen on a safe square.
+* Determining the squares still safe.
+* Roll back a solution if it turns out a queen cannot be placed due to a lack of safe squares. Then one or more previous queens have to be repositioned to remove their threats from some squares.
+
+#### Placing a queen
+The position for the current queen could be chosen at random. But that would maybe make it harder to roll back, in any case it would lead to collisions with already placed queens. Better to progress from queen to queen in a more systematic way.
+
+Queens could be placed column by column. The first queen somewhere in the first column (a1..an)m the second queen in the second column (b1..bn) etc.
+
+Once queen i has been place in column i other squares will be under threat. Of course, then not all squares in column i+1 are safe anymore for queen i+1.
+
+Within a column placement can be attempted from row 1 to row n.
+
+#### Determining a square's safety
+When a queen is placed all squares threatened by her could be marked as unsafe by registering the positions in some data structure. That could be a list of unsafe positions or a square board with tri-state squares (safe,unsafe,occupied).
+
+Alternatively only the positions of placed queens could be recorded - and then to check if a candidate square is safe it's checked against the "threat vectors" of the queens present.
+
+It seems that marking threatened squares would require the same effort as checking a candidate square for a threat - plus keeping a data structure around.
+
+#### Rolling back a solution
+If queens would be placed systematically column by column and row by row and only queen positions would be recorded, it would be easy to roll back a solution.
+
+If queen i cannot be placed anywhere in its column i then queen i-1 has to be repositioned. That means it needs to move to the next row with a safe square in its column. From there placing queen i is tried again.
+
+If no safe squares are left in column i-1 then the solution has to be rolled back to queen i-2 etc.
+
+This is a backtracking problem to be best solved with recursion, I guess.
+
+#### Integration
+How could solutions for these subproblems be shaped so that I can easily assemble them into an overall solution?
+
+I think the easiest part is checking for square safety:
+
+`bool IsSafe(Position candidatePosition, Position[] queens)`
+
+Then there is placing the next queen:
+
+`void PlaceQueen(int n, int i, Position[] queens, Action<Solution> onSolutionFound)`
+
+Placement needs to know which queen it's about (i.e. into which column it goes) and which queens have already been placed so it can be determined which squares in the column are safe.
+
+But since the solution is recursive this is the method to call itself. It thus needs to know if there are any queens left to place.
+
+Plus it needs to have a way to report a solution if one was found. I like to use a continuation for that instead of a data structure which accumulates results.
+
+The hardest problem, it seems, is checking for square safety. All else is enumeration (columns, rows) and tracking of queen positions.
+
+* Rows are enumerated in `PlaceQueen()`.
+* Columns are enumerated by calling `PlaceQueen()` with the next queen's number.
+* The queen positions passed to `PlaceQueen()` in the end are what goes into a `Solution{}`. Collecting all solutions is a trivial matter.
+
+The wrapper for all this is `Solve()` which kicks-off queen placement and collects the solutions in a continuation.
+
+Bottom-up development seems feasible:
+
+1. `IsSafe()`
+2. `PlaceQueen()`
+3. `Solve()`
+
+### Solving the safety check
 
 
 
