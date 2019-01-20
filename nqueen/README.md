@@ -207,6 +207,14 @@ Should there be more classes? Can any of the behaviour be offloaded to a data cl
 
 ![](images/flow3.jpg)
 
+## Implementation
+I'm going to start the implementation with the `Board{}` class. It needs to...
+
+* generate the squares for a given column and n, and
+* generate the squares on a certain vector starting from a given square
+
+
+
 
 
 

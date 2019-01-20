@@ -30,6 +30,9 @@ namespace nqueen
         }
 
 
+        string Serialize(Solution solution)
+            => string.Join("", solution.Queens.OrderBy(p => p.Row).Select(p => $"{p.Col}{p.Row}").ToArray());
+
 
         [Fact]
         public void Serialize_test() {
@@ -44,8 +47,5 @@ namespace nqueen
 
             Assert.Equal("c1b2a3", result);
         }
-
-        string Serialize(Solution solution)
-            => string.Join("", solution.Queens.OrderBy(p => p.Row).Select(p => $"{p.Col}{p.Row}").ToArray());
     }
 }
