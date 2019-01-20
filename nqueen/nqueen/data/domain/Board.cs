@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace nqueen.data
+namespace nqueen.data.domain
 {
     class Square{
         public int column;

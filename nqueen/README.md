@@ -239,6 +239,9 @@ Placing queens in all rows of a column should be easy. With the functions alread
 ### Solve()
 Finally `Solve()` is the top level integration. The only challenge there is to map the `Queens{}` to the `Solution{}`.
 
+## Retrospective
+
+
 
 
 

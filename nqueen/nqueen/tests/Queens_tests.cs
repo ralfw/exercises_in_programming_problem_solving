@@ -2,6 +2,7 @@ using System.Linq;
 using FluentAssertions;
 using Xunit;
 using nqueen.data;
+using nqueen.data.domain;
 
 namespace nqueen.tests
 {
