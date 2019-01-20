@@ -1,20 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using Microsoft.Extensions.DependencyModel;
 using nqueen.data;
 
-namespace nqueen {
-    public class Solution {
-        public Position[] Queens;
-        
-        public class Position {
-            public char Col; // 'a'..char(n) (e.g. 'd' for n=4)
-            public int Row; // 1..n
-        }
-    }
 
+namespace nqueen {
     public class NQueenProblem {
         private const int MINIMAL_N = 4;
 
@@ -27,11 +17,22 @@ namespace nqueen {
         private readonly Board _board;
         internal NQueenProblem(int n) => _board = new Board(n);
         
-        
         private Solution[] Solve() {
-            throw new NotImplementedException();
+            var partialSolutions = new List<Queens>();
+            PlaceQueens(0, new Queens(),
+                        partialSolutions.Add);
+            return Map(partialSolutions).ToArray();
         }
-        
+
+        private IEnumerable<Solution> Map(IEnumerable<Queens> partialSolutions) {
+            return partialSolutions.Select(qs => new Solution(qs.Squares.Select(Map).ToArray()));
+
+            Solution.Position Map(Square square)
+                => new Solution.Position( 
+                    col:(char)((byte)'a' + square.column), 
+                    row:square.row+1
+                );
+        }
         
         internal void PlaceQueens(int column, Queens queens, Action<Queens> onSolutionFound) {
             if (column >= _board.Size) { onSolutionFound(queens); return; }
@@ -50,7 +51,6 @@ namespace nqueen {
                              .ToList()
                              .ForEach(onRowSquare);
         }
-        
         
         internal bool IsSafe(int column, int row, Queens queens) {
             if (queens.Squares.Any() is false) return true;

@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Linq;
 using Xunit;
+using FluentAssertions;
 
 namespace nqueen.tests
 {
@@ -10,14 +12,13 @@ namespace nqueen.tests
         [InlineData(6, new[]{"e1c2a3f4d5b6", "d1a2e3b4f5c6", "c1f2b3e4a5d6", "b1d2f3a4c5e6"})]
         // See here (https://stamm-wilbrandt.de/en/xsl-list/n-queens/n-queens.xsl.xml) for these
         // and more solutions.
-        public void RelevantN(int n, string[] expected)
-        {
+        public void RelevantN(int n, string[] expected) {
             var result = NQueenProblem.Solve(n);
 
             Assert.Equal(expected.Length, result.Length);
 
             var serializedResult = result.Select(Serialize);
-            Assert.Equal(expected, serializedResult);
+            serializedResult.Should().BeEquivalentTo(expected);
         }
 
 
@@ -35,12 +36,11 @@ namespace nqueen.tests
 
         [Fact]
         public void Serialize_test() {
-            var sol = new Solution();
-            sol.Queens = new[]{
-                new Solution.Position(){Col='a', Row=3},
-                new Solution.Position(){Col='b', Row=2},
-                new Solution.Position(){Col='c', Row=1},
-            };
+            var sol = new Solution(new[]{
+                new Solution.Position('a',3),
+                new Solution.Position('b', 2),
+                new Solution.Position('c', 1),
+            });
 
             var result = Serialize(sol);
 

@@ -236,6 +236,8 @@ This is simple, just a bit tedious for the eight thread vectors.
 ### PlaceQueens()
 Placing queens in all rows of a column should be easy. With the functions already in place the rest is not much effort. It can even be tested agains a 3x3 board since no recursion is necessary.
 
+### Solve()
+Finally `Solve()` is the top level integration. The only challenge there is to map the `Queens{}` to the `Solution{}`.
 
 
 
