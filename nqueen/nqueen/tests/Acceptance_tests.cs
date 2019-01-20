@@ -9,7 +9,7 @@ namespace nqueen.tests
         [InlineData(4, new[]{"c1a2d3b4", "b1d2a3c4"})]
         [InlineData(6, new[]{"e1c2a3f4d5b6", "d1a2e3b4f5c6", "c1f2b3e4a5d6", "b1d2f3a4c5e6"})]
         // See here (https://stamm-wilbrandt.de/en/xsl-list/n-queens/n-queens.xsl.xml) for these
-        // an more solutions.
+        // and more solutions.
         public void RelevantN(int n, string[] expected)
         {
             var result = NQueenProblem.Solve(n);
@@ -23,9 +23,9 @@ namespace nqueen.tests
 
         [Fact]
         public void IrrelevantN(){
-            Assert.Equal(0, NQueenProblem.Solve(1).Length);
-            Assert.Equal(0, NQueenProblem.Solve(2).Length);
-            Assert.Equal(0, NQueenProblem.Solve(3).Length);
+            Assert.Empty(NQueenProblem.Solve(1));
+            Assert.Empty(NQueenProblem.Solve(2));
+            Assert.Empty(NQueenProblem.Solve(3));
         }
 
 
