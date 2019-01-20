@@ -16,5 +16,15 @@ namespace nqueen
 
         public IEnumerable<Square> SquaresInColumn(int column)
             => Enumerable.Range(0, _n).Select(row => new Square {column = column, row = row});
+
+        public IEnumerable<Square> SquaresInVector(int column, int row, int deltaColumn, int deltaRow) {
+            while (true) {
+                column += deltaColumn;
+                row += deltaRow;
+                if (column < 0 || column >= _n || row < 0 || row >= _n) break;
+                
+                yield return new Square {column = column, row = row};
+            }
+        }
     }
 }
