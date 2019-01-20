@@ -208,11 +208,13 @@ Should there be more classes? Can any of the behaviour be offloaded to a data cl
 ![](images/flow3.jpg)
 
 ## Implementation
+### Board{}
 I'm going to start the implementation with the `Board{}` class. It needs to...
 
 * generate the squares for a given column and n, and
 * generate the squares on a certain vector starting from a given square
 
+### Queens{}
 With the board in place I move on to the `Queens{}` class. It needs to...
 
 * be immutable,
@@ -225,7 +227,14 @@ The implementation for the check function is simple, but the question is, how ex
 
 To give it an `Add()` function is fitting this position. But should the check be `IsAnyOfTheseSquaresOccupied()`? That would fit best the single current context where this function would be used. But it's also very specific. Rather, I think, the function should be `Unoccupied()` which returns all squares from a list which are still free.
 
+### NQueenProblem{}
+#### IsSafe()
+The core subproblem of the n-queen problem is checking for a square being safe. The main building blocks for that have been implemented: the `Board{}` and `Queens{}`. Now it's time to integrate them.
 
+This is simple, just a bit tedious for the eight thread vectors.
+
+### PlaceQueens()
+Placing queens in all rows of a column should be easy. With the functions already in place the rest is not much effort. It can even be tested agains a 3x3 board since no recursion is necessary.
 
 
 
