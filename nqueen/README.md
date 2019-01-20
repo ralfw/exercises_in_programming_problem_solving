@@ -240,8 +240,44 @@ Placing queens in all rows of a column should be easy. With the functions alread
 Finally `Solve()` is the top level integration. The only challenge there is to map the `Queens{}` to the `Solution{}`.
 
 ## Retrospective
+Implementation went smoothly. So smoothly that I even forgot there was a function to enumerate the squares in a column on `Board{}`; I implemented the functionality once more on the fly in `PlaceQueen{}`.
 
+Only one glitch spoilt the implementation flow: immutability. I did this in `PlaceQueen{}`:
 
+```
+queens = queens.Add(q);
+PlaceQueens(..., queens, ...);
+```
+
+The compiler accepted this. I was so proud of re-using `queens` instead of declaring a new variable - but then tests started to fail. Bummer!
+
+What I had not realized was that overwriting `queens` had an influence on future iterations over the squares in the column.
+
+Some debugging with good old `Debug.WriteLine()` interspersed finally uncovered the bug. The solution was simple:
+
+`PlaceQueens(..., queens.Add(q), ...);`
+
+### Refactoring to deeper insight
+After pushing the finished code I leaned back a perused it once more in its entirety. I was working - but was it clean enough already?
+
+`NQueenProblem{}` to me seemed burdened with too many functions. Also I did not like the need for (internal) instanciation to make n or the board available without cluttering parameter lists.
+
+I asked myself: are there any functions which could go on a data structure? And I decided that `IsSafe()` was a candidate for that. I imagined a higher level `ChessBoard{}` to know some rules of the game.
+
+`Board{}` was low level on purpose. It enforces a square board and knows about squares. A `ChessBoard{}` would rise above that and know about the purpose of those squares: placing queens safely. Hence it is composed from a `Board{}` and `Queens{}` and offers a check for safety in addition to placing a queen. (Of course `ChessBoard{}` also is immutable.)
+
+The algorithm for placing queens, though, is still kept separate! That's the domain logic. And `ChessBoard{}` is hi level domain data.
+
+The final class diagram thus is looking like this:
+
+![](images/classdiagram.jpg)
+
+Never mind the unusual look of the diagram. I consiously chose this unconvential look to emphazise how all classes (and their functions) need to fit together. They are like pieces of a puzzle: only if put together the right way the overall picture is created correctly.
+
+Please note how the diagram nicely shows `ChessBoard{}` encapsulating `Board{}` and `Queens{}`. This is an expression of its higher abstraction level.
+
+### Summary
+This was a fun exercise in problem solving. I'm happy with the systematic approach alternating between looking for simpler and complementary subproblems.
 
 
 
