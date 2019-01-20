@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace nqueen.data
 {
-    public class Square{
+    class Square{
         public int column;
         public int row;
     }
