@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.DependencyModel;
 using nqueen.data;
@@ -29,6 +30,25 @@ namespace nqueen {
         
         private Solution[] Solve() {
             throw new NotImplementedException();
+        }
+        
+        
+        internal void PlaceQueens(int column, Queens queens, Action<Queens> onSolutionFound) {
+            if (column >= _board.Size) { onSolutionFound(queens); return; }
+            
+            GenerateRowSquares(candidateSquare => {
+                if (IsSafe(candidateSquare.column, candidateSquare.row, queens)) {
+                    PlaceQueens(column+1, queens.Add(candidateSquare), 
+                                onSolutionFound);
+                }
+            });
+
+            
+            void GenerateRowSquares(Action<Square> onRowSquare)
+                => Enumerable.Range(0, _board.Size)
+                             .Select(row => new Square {column = column, row = row})
+                             .ToList()
+                             .ForEach(onRowSquare);
         }
         
         
