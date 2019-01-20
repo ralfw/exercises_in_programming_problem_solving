@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace nqueen
+namespace nqueen.data
 {
+    public class Square{
+        public int column;
+        public int row;
+    }
+    
     class Board {
-        public class Square{
-            public int column;
-            public int row;
-        }
-
         private int _n;
 
         public Board(int n) => _n = n;

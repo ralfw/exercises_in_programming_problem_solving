@@ -1,8 +1,9 @@
 using System.Linq;
-using Xunit;
 using FluentAssertions;
+using nqueen.data;
+using Xunit;
 
-namespace nqueen
+namespace nqueen.tests
 {
     public class Board_tests
     {
@@ -16,13 +17,13 @@ namespace nqueen
             var row = 1;
 
             var result = sut.SquaresInVector(col, row, -1, -1);
-            result.Should().BeEquivalentTo(new[] {new Board.Square {column = col-1, row = row-1}});
+            result.Should().BeEquivalentTo(new[] {new Square {column = col-1, row = row-1}});
             
             result = sut.SquaresInVector(col, row, 1, 1);
-            result.Should().BeEquivalentTo(new[] {new Board.Square {column = col+1, row = row+1}});
+            result.Should().BeEquivalentTo(new[] {new Square {column = col+1, row = row+1}});
             
             result = sut.SquaresInVector(col, row, 0, 1);
-            result.Should().BeEquivalentTo(new[] {new Board.Square {column = col, row = row+1}});
+            result.Should().BeEquivalentTo(new[] {new Square {column = col, row = row+1}});
         }
         
         [Fact]
@@ -37,57 +38,57 @@ namespace nqueen
             // north
             var result = sut.SquaresInVector(col, row, 0, -1);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = col, row = 0},
-                new Board.Square {column = col, row = 1},
+                new Square {column = col, row = 0},
+                new Square {column = col, row = 1},
             });
             
             // south
             result = sut.SquaresInVector(col, row, 0, 1);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = col, row = 3},
-                new Board.Square {column = col, row = 4},
+                new Square {column = col, row = 3},
+                new Square {column = col, row = 4},
             });
             
             // west
             result = sut.SquaresInVector(col, row, -1, 0);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = 0, row = row},
-                new Board.Square {column = 1, row = row},
+                new Square {column = 0, row = row},
+                new Square {column = 1, row = row},
             });
             
             // east
             result = sut.SquaresInVector(col, row, 1, 0);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = 3, row = row},
-                new Board.Square {column = 4, row = row},
+                new Square {column = 3, row = row},
+                new Square {column = 4, row = row},
             });
             
             // north-west
             result = sut.SquaresInVector(col, row, -1, -1);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = 0, row = 0},
-                new Board.Square {column = 1, row = 1},
+                new Square {column = 0, row = 0},
+                new Square {column = 1, row = 1},
             });
             
             // south-east
             result = sut.SquaresInVector(col, row, 1, 1);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = 3, row = 3},
-                new Board.Square {column = 4, row = 4},
+                new Square {column = 3, row = 3},
+                new Square {column = 4, row = 4},
             });
             
             // north-east
             result = sut.SquaresInVector(col, row, 1, -1);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = 4, row = 0},
-                new Board.Square {column = 3, row = 1},
+                new Square {column = 4, row = 0},
+                new Square {column = 3, row = 1},
             });
             
             // south-west
             result = sut.SquaresInVector(col, row, -1, 1);
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = 0, row = 4},
-                new Board.Square {column = 1, row = 3},
+                new Square {column = 0, row = 4},
+                new Square {column = 1, row = 3},
             });
         }
         
@@ -101,7 +102,7 @@ namespace nqueen
 
             var result = sut.SquaresInColumn(col).ToArray();
 
-            result.Should().BeEquivalentTo(new[] {new Board.Square {column = col, row = 0}});
+            result.Should().BeEquivalentTo(new[] {new Square {column = col, row = 0}});
         }
         
         [Fact]
@@ -114,9 +115,9 @@ namespace nqueen
             var result = sut.SquaresInColumn(col).ToArray();
 
             result.Should().BeEquivalentTo(new[] {
-                new Board.Square {column = col, row = 0},
-                new Board.Square {column = col, row = 1},
-                new Board.Square {column = col, row = 2},
+                new Square {column = col, row = 0},
+                new Square {column = col, row = 1},
+                new Square {column = col, row = 2},
             });
         }
     }

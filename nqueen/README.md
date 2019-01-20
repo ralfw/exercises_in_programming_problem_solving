@@ -213,6 +213,20 @@ I'm going to start the implementation with the `Board{}` class. It needs to...
 * generate the squares for a given column and n, and
 * generate the squares on a certain vector starting from a given square
 
+With the board in place I move on to the `Queens{}` class. It needs to...
+
+* be immutable,
+* allow for adding a queen, and
+* check if any of a number of squares is occupied by a queen
+
+The implementation for the check function is simple, but the question is, how exactly should the question be phrased?
+
+`Queens{}` of course is a data type specific to the n-queen problem. On the other hand it should be pretty general in its services so it can be used in different contexts within the solution. It sits at the base of the class hierarchy, below the operation stratum.
+
+To give it an `Add()` function is fitting this position. But should the check be `IsAnyOfTheseSquaresOccupied()`? That would fit best the single current context where this function would be used. But it's also very specific. Rather, I think, the function should be `Unoccupied()` which returns all squares from a list which are still free.
+
+
+
 
 
 

@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
 using Xunit;
 
-namespace nqueen
+namespace nqueen.tests
 {
     public class Acceptance_tests
     {
