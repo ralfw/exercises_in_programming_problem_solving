@@ -76,7 +76,3 @@ var puzzle = new[,]{
 ## Design
 
 
-
-online sudoku with different levels: https://www.websudoku.com
-
-
