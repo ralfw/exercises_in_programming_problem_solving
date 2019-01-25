@@ -7,7 +7,7 @@ namespace sudoku
     class SolutionChecker
     {
         public static bool Check(int[,] sln)
-            => CheckRows(sln) & CheckCols(sln) & CheckBoxes(sln);
+            => CheckBoxes(sln) & CheckRows(sln) & CheckCols(sln);
 
         private static bool CheckRows(int[,] sln) {
             var size = sln.GetLength(1);
@@ -17,7 +17,7 @@ namespace sudoku
             return true;
         }
 
-        internal static bool CheckRow(int[,] sln, int size, int row) {
+        static bool CheckRow(int[,] sln, int size, int row) {
             var numbers = Enumerable.Range(0, size).Select(col => sln[row, col]);
             var expected = Enumerable.Range(1, size).ToArray();
             return expected.Intersect(numbers).Count() == expected.Length;
@@ -31,7 +31,7 @@ namespace sudoku
             return true;
         }
         
-        internal static bool CheckCol(int[,] sln, int size, int col) {
+        static bool CheckCol(int[,] sln, int size, int col) {
             var numbers = Enumerable.Range(0, size).Select(row => sln[row, col]);
             var expected = Enumerable.Range(1, size).ToArray();
             return expected.Intersect(numbers).Count() == expected.Length;
@@ -46,7 +46,7 @@ namespace sudoku
             return true;
         }
 
-        internal static bool CheckBox(int[,] sln, int n, int toprow, int leftcol) {
+        static bool CheckBox(int[,] sln, int n, int toprow, int leftcol) {
             var numbers = new List<int>();
             for(var row=toprow; row < toprow+n; row++)
             for (var col = leftcol; col < leftcol+n; col++)
