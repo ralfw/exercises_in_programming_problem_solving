@@ -87,4 +87,9 @@ In the end, though, the difficulty of solving a Sudoku puzzle should not be high
 
 ## Design
 
+## Retrospective
+
+
+Implementing acceptance tests required some programmimng for `SolutionChecker{}`. It was small problem of its own.
+
 

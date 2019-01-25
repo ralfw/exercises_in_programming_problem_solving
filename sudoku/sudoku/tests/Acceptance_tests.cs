@@ -1,7 +1,6 @@
-using System.Diagnostics;
 using Xunit;
 
-namespace sudoku
+namespace sudoku.tests
 {
     public class Acceptance_tests
     {
@@ -41,15 +40,6 @@ namespace sudoku
             var result = SudokuSolver.Solve(puzzle);
             
             Assert.True(SolutionChecker.Check(result));
-        }
-    }
-
-
-    public class SudokuSolver
-    {
-        public static int[,] Solve(int[,] puzzle)
-        {
-            return puzzle;
         }
     }
 }

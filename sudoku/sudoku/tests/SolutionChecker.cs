@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sudoku
+namespace sudoku.tests
 {
-    class SolutionChecker
+    static class SolutionChecker
     {
         public static bool Check(int[,] sln)
-            => CheckBoxes(sln) & CheckRows(sln) & CheckCols(sln);
+            => CheckBoxes(sln) && CheckRows(sln) && CheckCols(sln);
 
+        
         private static bool CheckRows(int[,] sln) {
             var size = sln.GetLength(1);
             for(var row=0; row<size; row++)
@@ -23,6 +24,7 @@ namespace sudoku
             return expected.Intersect(numbers).Count() == expected.Length;
         }
 
+        
         static bool CheckCols(int[,] sln) {
             var size = sln.GetLength(0);
             for(var col=0; col<size; col++)
@@ -37,6 +39,7 @@ namespace sudoku
             return expected.Intersect(numbers).Count() == expected.Length;
         }
 
+        
         static bool CheckBoxes(int[,] sln) {
             var n = (int)Math.Sqrt(sln.GetLength(0));
             for(var brow=0; brow<n; brow++)

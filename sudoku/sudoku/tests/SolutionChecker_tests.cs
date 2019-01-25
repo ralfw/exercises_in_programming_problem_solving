@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace sudoku
+namespace sudoku.tests
 {
     public class SolutionChecker_tests
     {
@@ -29,7 +29,7 @@ namespace sudoku
         }
         
         [Fact]
-        public void CheckSolution_incorrect_due_to_number_doubling_in_rows()
+        public void CheckSolution_incorrect_due_to_number_doubling_in_rows_and_cols()
         {
             var sln = new[,] {
                 {1, 2, 3, 4},
