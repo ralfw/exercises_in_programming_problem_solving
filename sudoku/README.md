@@ -40,14 +40,16 @@ Solving a puzzle means to put the numbers 1 .. n x n into all cells in a way so 
 
 In order to gain some experience playing Sudoku I played it online [here](https://sudoku.game) and [here](https://www.websudoku.com).
 
-### Function to deliver
-The Sudoku solver can look quite simple:
+### The deliverable
+The Sudoku solver can look quite simple. A single function will do:
 
 `int[,] Solve(int[,] puzzle)`
 
 The interface with the outside world needs to be just a square integer matrix with a width being the square of some (e.g. 4 (n=2), 9 (n=3), 16 (n=4)). Each array element represents a cell of the puzzle. Cells not set in the puzzle contain 0. All other cells contain a number in the range of 1 .. n x n.
 
 A matrix with all cells set to a number in that range is returned as the solution. If none can be found an exception is thrown. Only square matrixes with a size > 1 can be processed; other matrixes cause an exception.
+
+That seems to be the minimal surface for the solution. None of its internal workings or data structures should leak to the outside.
 
 The function only returns a single result even if multiple results might exist. Picking the first result found during the solution process is fine.
 
@@ -72,6 +74,16 @@ var puzzle = new[,]{
   {4,0,0,1}
 }
 ```
+
+### Increments
+It's ok to focus on the sunny day: input data is correct. No validation is needed (at first). Validation is easy and would only defer tackling the real problem. The real challenge lies in solving the puzzle.
+
+Without know a solution to the problem it seems that some puzzles might be simpler than others:
+
+* a puzzle with n=2 is simpler than one with n=3, and
+* a puzzle with n=2 and 15 out of 16 cells already set is easier than one with just 5 or even 14 cells set.
+
+In the end, though, the difficulty of solving a Sudoku puzzle should not be higher with increasing n. The algorithm will very likely be the same for n=2 or n=10. It just will take more time/memory to solve an n=10 puzzle. Hence it's not necessary to encode larger puzzles as acceptance criteria.
 
 ## Design
 
