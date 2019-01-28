@@ -86,6 +86,182 @@ Without know a solution to the problem it seems that some puzzles might be simpl
 In the end, though, the difficulty of solving a Sudoku puzzle should not be higher with increasing n. The algorithm will very likely be the same for n=2 or n=10. It just will take more time/memory to solve an n=10 puzzle. Hence it's not necessary to encode larger puzzles as acceptance criteria.
 
 ## Design
+There seem to be two basic approaches to solve the problem:
+
+* brute force
+* smart
+
+### Brute force
+A brute force approach would look like this:
+
+Solve the puzzle for k remaining cells...
+
+1. pick the first of the remaining cells,
+2. for each number from 1 to n x n,
+  1. check if the number would be ok in that cell (by checking the constraints on box, row, colum)
+  2. if ok, assign the number to the cell, and
+      1. solve the puzzle for k-1 remaining cells.
+  3. if not ok or no solution was found go back up to step 2.
+ 
+That would be a simple solution with the most difficult part being the constraint check. Also some though would have to go into data structures.
+
+But would that approach be feasible?
+
+For n=2 there would be 16 cells each with 4 numbers to check. That would lead to 4 x 4 x 4 x ... 4 = 4^16 = roughly 4.2 billion different boards to check. Or maybe not, because due to the already place numbers in a puzzle the remaining choices for each cell are maybe just 2 or 3 numbers (average 2.5). Also since some cells are already claimed not all 16 would need to be checked. Are more realistic brute force figure maybe would be 2.5^11 which is less than 25000 different boards. And not even all of them would be fully generated; due to constrains not all branches in the recursion tree would be followed.
+
+For n=2 brute force seems to be a feasible approach.
+
+For n=3, though, there would be 81 cells each with 9 numbers to check. Not all those numbers, though, are candidates due to other numbers already placed. So I'll assume it's just 5 numbers on average. Also not all 81 cells need to be checked. I'll assume 25 to be alredy occupied (as in hard or evil puzzles). That leaves 5^56 or some 1.3 x 10^39 possible boards. That's a lot!
+
+Even if I assume that only one in a billion boards gets generated that still would be 10^30.
+
+If each board only took a nanosecond to generate it would still take 10^21 seconds or many times longer than the universe exists.
+
+Maybe I could shave of some more powers of 10, but in the end, I guess, it's too uncertain if a brute force approach would deliver a solution in a reasonable amount of time for n>2.
+
+## Smart
+What's a smart approach? I'd say it's one which tries to cut down a "solution tree" as fast as possible.
+
+Here's what I mean:
+
+![](images/relevantnumbers.jpg)
+
+This puzzles shows all cells either filled with a *given number*, e.g. 4 in the upper left box, or all *possible numbers* (1..n x n).
+
+In each cell, however, the possible numbers already have been narrowed down to *candidate numbers*, e.g. 1 in the upper left cell or 3 and 4 in the lower right cell.
+
+Candidate numbers are the numbers which might be the *solution number* for their cell.
+
+Candidate numbers are arrived at by checking the constraints for box, row, column for all possible numbers. For the upper left cell that means, 2, 3, and 4 are no candidates they already can be found in the same box (4) or row (3) or column (2).
+
+And with all but one possible numbers eliminated the remaining candidate number 1 even must be the solution number for the cell. The same is true for the candidate number 4 in the upper right cell.
+
+But some cells still have more than one candidate number left making further inquiry necessary.
+
+Such application of constraints is very quickly pruning the solution tree. No solutions with a 1 in the upper right cell or a 3 in the upper left cell of the lower right box need to be tried.
+
+### Smart algorithm v1
+To get closer to a solution I watched myself a couple of times solving Sudoku puzzles.
+
+![](images/research2.jpg)
+
+As you can see, n=3 puzzles were no fun to do (top middle puzzle); I did not finish them by explicitly working with possible and candidate numbers. I pretty much stuck to n=2 puzzles to develop a solution.
+
+And once patterns seemed to emerge I tried to formalize them. Here's my first take on how to solve the problem:
+
+It all starts with a *workbench*. That's a matrix matching the puzzle size where each cell is filled with all possible numbers.
+
+![](images/ver1/workbench.png)
+
+Then the given numbers from the puzzle are placed on the workbench. That naturally leads to cells with only a single candidate number, which means the puzzle has been partially solved for those cells already. The number of those cells is now *fixed* (circled numbers in below picture).
+
+![](images/ver1/placed.png)
+
+After setting up the workbench like this the fun begins!
+
+The solution numbers resulting from placing the given numbers constrain the other cells (green marks). Not all possible numbers can remain candidate numbers.
+
+![](images/ver1/constrained.png)
+
+Applying the constraints to all cells with multiple candidate numbers sometimes has no effect on the candidate numbers, sometimes only leads to a decrease in their number, but sometimes results in just one candidate number left (green circled numbers).
+
+![](images/ver1/fixed.png)
+
+Since applying the constraints leads to new fixed cells the constrains have to be applied again (red marks and circles).
+
+![](images/ver1/constrained-fixed-2.png)
+
+And then again:
+
+![](images/ver1/constrained-fixed-3.png)
+
+After this last constrain-fix pass the puzzle has been solved. All cells have been fixed.
+
+The algorithm so far:
+
+1. Initialize
+  1. Create workbench
+  2. Place given numbers on workbench
+2. Constrain non-fixed cells (strike through invalid candidate numbers)
+3. Fix cells where only one candidate number is left (circle solution number)
+
+Repeat steps 2 and 3 until all cells have been fixed.
+
+### Smart algorithm v2
+Unfortunately this algorithm sometimes is hitting a wall. Here is another puzzle I attacked with the version 1 algorithm:
+
+![](images/ver2/initialized.png)
+
+The first three constrain-fix passes are working (blue, green, red). But then the fourth pass (brown) is hittig a wall:
+
+![](images/ver2/passes-1-4.png)
+
+The red circled numbers cause only brown removals of candidate numbers. But constraining the candidates in that manner does not result in any cells which could be fixed. The pass does not lead to any new solution numbers. A next pass of constraining does not have any starting points.
+
+What to do now?
+
+This standstill has to be broken by selecting an arbitrary non-fixed cell and fix it. This puzzle is more difficult than the one before. It can only be solved with some trial-and-error approach.
+
+Here's a trial:
+
+![](images/ver2/trial-1.png)
+
+The top-left cell is arbitrarily picked and arbitrarily fixed to 1 (blue). This is enough to run two new passes (pink and green) starting from this choice.
+
+Unfortunately the green pass again hits a wall. It's constraints do not lead to any fixed cells.
+
+On top of the first trial a second has to be started: The lower-left cell of the upper-right box is fixed to 1 (brown):
+
+![](images/ver2/trial-2.png)
+
+And starting from this two more passes lead to a solution. Yay!🏆
+
+The algorithm has to be extended:
+
+1. Initialize
+  1. Create workbench
+  2. Place given numbers on workbench
+2. Constrain non-fixed cells (strike through invalid candidate numbers)
+3. Fix cells where only one candidate number is left (circle solution number)
+4. If fixes can be applied go back to 2. Otherwise, if no solution has been found:
+  1. Pick a cell and fix it
+  2. Start again at 2 (recursion).
+
+### Smart algorithm v3
+So far puzzle could be solved by trying an arbitrary fix in the case of a stand-still. But what if this fix does not lead to a solution? Since the fix is arbitrary there's no guarantee to pick a candidate number which is the solution number.
+
+The algorithm has to be prepared for the error in trial-and-error.
+
+In my experience errors have two forms:
+
+* Applying the constrains leads to a cell with no candidates left.
+* Fixing cells leads to two cells with the same solution number within a cell's *constraint horizon*.
+
+Here's an example for the latter:
+
+![](images/ver3/conflict.jpg)
+
+Arriving at such a conflict requires a harder puzzle. As you can see it took me some trials to finally get two cells to be fixed to 2 within their constraint horizon.
+
+The constraint horizon of a cell encompasses its box, its row, and its column.
+
+When a trial is hitting an error all changes have to be rolled back and another trial has to be run. In this case the trial was fixing a cell in the top-middle box to 3 (blue circle). This obviously does not lead to a solution. The next trial could be to fix the same cell to 8. And if that does not work out move on to the next cell and fix it to 6 and so on and so on.
+
+The algorithm needs to be adapted to run several trials on error:
+
+1. Initialize
+  1. Create workbench
+  2. Place given numbers on workbench
+2. Constrain non-fixed cells (strike through invalid candidate numbers)
+3. Fix cells where only one candidate number is left (circle solution number)
+4. If fixes can be applied go back to 2. Otherwise, if no solution has been found:
+  1. Pick a cell and fix it
+      1. Start again at 2 (recursion).
+      2. If no solution could be found, go back to 4.1.
+
+### Simpler test cases
+no i can identify simpler cases because i know the solution
+
 
 ## Retrospective
 
