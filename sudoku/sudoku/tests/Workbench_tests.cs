@@ -72,6 +72,52 @@ namespace sudoku
         
         
         [Fact]
+        public void Horizon_calculation()
+        {
+            var puzzle = new[,] {
+                {0,0, 2,0},
+                {1,0, 0,4},
+                
+                {0,1, 3,2},
+                {2,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
+
+            var horizon = sut.Horizon(sut.Fixed[0]); // 2 in upper right box
+            Assert.Equal(9, horizon.Length);
+            
+            Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 4);
+            Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 3);
+            Assert.DoesNotContain(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 2);
+        }
+
+        [Fact]
+        public void Determine_coords()
+        {
+            var puzzle = new[,] {
+                {0,0, 2,0},
+                {1,0, 0,4},
+                
+                {0,1, 3,2},
+                {2,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
+
+            var (row, col) = sut.DetermineCoordinates(sut.Fixed[0]);
+            Assert.Equal(0, row);
+            Assert.Equal(2, col);
+
+            (row, col) = sut.DetermineCoordinates(sut.Fixed[1]);
+            Assert.Equal(1, row);
+            Assert.Equal(0, col);
+            
+            (row, col) = sut.DetermineCoordinates(sut.Fixed[5]);
+            Assert.Equal(2, row);
+            Assert.Equal(3, col);
+        }
+        
+        
+        [Fact]
         public void Cell_tests() {
             var sut = new Workbench.Cell(3);
             

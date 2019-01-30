@@ -58,8 +58,25 @@ namespace sudoku
 
         public Cell[] Fixed => AllCells().Where(cell => cell.IsFixed).ToArray();
         public Cell[] Unfixed => AllCells().Where(cell => cell.IsFixed is false).ToArray();
+
+        public Cell[] Horizon(Cell center) {
+            var centerCoords = DetermineCoordinates(center);
+            return HorizonCoordinates(centerCoords.row, centerCoords.col)
+                    .Select(coord => _cells[coord.row, coord.col])
+                    .ToArray();
+        }
+
+        internal (int row, int col) DetermineCoordinates(Cell cell) {
+            foreach(var coord in AllCoordinates())
+                if (_cells[coord.row, coord.col] == cell)
+                    return (coord.row, coord.col);
+            throw new InvalidOperationException("Cell not present in workbench!");
+        }
         
-        public Cell[] Horizon(Cell center) { throw new NotImplementedException(); }
+        internal IEnumerable<(int row, int col)> HorizonCoordinates(int row, int col)
+        {
+            throw new NotImplementedException();
+        }
         
         public int[,] Matrix { 
             get {
