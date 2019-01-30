@@ -1,15 +1,15 @@
 using System.Linq;
 using Xunit;
 
-namespace sudoku
+namespace sudoku.tests
 {
     public class Workbench_tests
     {
         [Fact]
         public void Initially_all_cells_unfixed() {
             var sut = new Workbench(new[,] {
-                {4,1},
-                {2,3}
+                {0,0},
+                {0,0}
             });
             Assert.Equal(4, sut.Unfixed.Length);
             Assert.Empty(sut.Fixed);
@@ -18,8 +18,8 @@ namespace sudoku
         [Fact]
         public void Matrix_generation() {
             var sut = new Workbench(new[,] {
-                {4,1},
-                {2,3}
+                {0,0},
+                {0,0}
             });
 
             var cells = sut.Unfixed;
@@ -75,24 +75,25 @@ namespace sudoku
         public void Horizon_calculation()
         {
             var puzzle = new[,] {
-                {0,0, 2,0},
-                {1,0, 0,4},
+                {0,0, 0,3},
+                {1,0, 2,4},
                 
                 {0,1, 3,2},
                 {2,0, 0,0}
             };
             var sut = new Workbench(puzzle);
 
-            var horizon = sut.Horizon(sut.Fixed[0]); // 2 in upper right box
+            var horizon = sut.Horizon(sut.Fixed[2]); // 2 in upper right box
             Assert.Equal(9, horizon.Length);
             
             Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 4);
             Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 3);
+            Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 1);
             Assert.DoesNotContain(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 2);
         }
 
         [Fact]
-        public void Determine_coords()
+        public void __Determine_coords()
         {
             var puzzle = new[,] {
                 {0,0, 2,0},
@@ -114,6 +115,28 @@ namespace sudoku
             (row, col) = sut.DetermineCoordinates(sut.Fixed[5]);
             Assert.Equal(2, row);
             Assert.Equal(3, col);
+        }
+        
+        [Fact]
+        public void __Horizon_coords_calculation()
+        {
+            var puzzle = new[,] {
+                {0,0, 0,3},
+                {1,0, 2,4},
+                
+                {0,1, 3,2},
+                {2,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
+
+            var result = sut.HorizonCoordinates(2, 3).ToArray();
+            Assert.Equal(9, result.Length);
+            
+            Assert.Equal(new[] {
+                (2,2),(3,2),(3,3), // box
+                (2,0),(2,1),(2,2), // row
+                (0,3),(1,3),(3,3)  // col
+            }, result);
         }
         
         

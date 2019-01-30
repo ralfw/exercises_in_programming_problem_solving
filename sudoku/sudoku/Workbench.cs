@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace sudoku
@@ -40,6 +41,8 @@ namespace sudoku
             void PlaceGivenNumbers() {
                 foreach (var coord in AllCoordinates()) {
                     var givenNumber = matrix[coord.row, coord.col];
+                    if (givenNumber == 0) continue;
+                    
                     foreach (var i in Enumerable.Range(1,nxn))
                         if (i != givenNumber) _cells[coord.row,coord.col].RemoveCandidate(i);
                 }
@@ -75,7 +78,28 @@ namespace sudoku
         
         internal IEnumerable<(int row, int col)> HorizonCoordinates(int row, int col)
         {
-            throw new NotImplementedException();
+            // box coordinates
+            var boxHeight = (int)Math.Sqrt(_cells.GetLength(0));
+            var boxWidth = (int) Math.Sqrt(_cells.GetLength(1));
+            var boxTop = row / boxHeight * boxHeight;
+            var boxLeft = col / boxWidth * boxWidth;
+            for(var dr = 0; dr < boxHeight; dr++)
+            for (var dc = 0; dc < boxWidth; dc++) {
+                var r = boxTop + dr;
+                var c = boxLeft + dc;
+                if ((r == row && c == col) is false)
+                    yield return (r, c);
+            }
+
+            // row coordinates
+            for (var c = 0; c < _cells.GetLength(1); c++)
+                if (c != col)
+                    yield return (row, c);
+            
+            // column coordinates
+            for (var r = 0; r < _cells.GetLength(0); r++)
+                if (r != row)
+                    yield return (r, col);
         }
         
         public int[,] Matrix { 
