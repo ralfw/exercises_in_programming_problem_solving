@@ -85,7 +85,7 @@ Without know a solution to the problem it seems that some puzzles might be simpl
 
 In the end, though, the difficulty of solving a Sudoku puzzle should not be higher with increasing n. The algorithm will very likely be the same for n=2 or n=10. It just will take more time/memory to solve an n=10 puzzle. Hence it's not necessary to encode larger puzzles as acceptance criteria.
 
-## Design
+## Design 1
 There seem to be two basic approaches to solve the problem:
 
 * brute force
@@ -119,7 +119,7 @@ If each board only took a nanosecond to generate it would still take 10^21 secon
 
 Maybe I could shave of some more powers of 10, but in the end, I guess, it's too uncertain if a brute force approach would deliver a solution in a reasonable amount of time for n>2.
 
-## Smart
+### Smart
 What's a smart approach? I'd say it's one which tries to cut down a "solution tree" as fast as possible.
 
 Here's what I mean:
@@ -140,7 +140,7 @@ But some cells still have more than one candidate number left making further inq
 
 Such application of constraints is very quickly pruning the solution tree. No solutions with a 1 in the upper right cell or a 3 in the upper left cell of the lower right box need to be tried.
 
-### Smart algorithm v1
+#### Smart algorithm v1
 To get closer to a solution I watched myself a couple of times solving Sudoku puzzles.
 
 ![](images/research2.jpg)
@@ -187,7 +187,7 @@ The algorithm so far:
 
 Repeat steps 2 and 3 until all cells have been fixed.
 
-### Smart algorithm v2
+#### Smart algorithm v2
 Unfortunately this algorithm sometimes is hitting a wall. Here is another puzzle I attacked with the version 1 algorithm:
 
 ![](images/ver2/initialized.png)
@@ -227,12 +227,12 @@ The algorithm has to be extended:
   1. Pick a cell and fix it
   2. Start again at 2 (recursion).
 
-### Smart algorithm v3
+#### Smart algorithm v3
 So far puzzle could be solved by trying an arbitrary fix in the case of a stand-still. But what if this fix does not lead to a solution? Since the fix is arbitrary there's no guarantee to pick a candidate number which is the solution number.
 
 The algorithm has to be prepared for the error in trial-and-error.
 
-In my experience errors have two forms:
+From what I can see errors have two forms:
 
 * Applying the constrains leads to a cell with no candidates left.
 * Fixing cells leads to two cells with the same solution number within a cell's *constraint horizon*.
@@ -259,13 +259,161 @@ The algorithm needs to be adapted to run several trials on error:
       1. Start again at 2 (recursion).
       2. If no solution could be found, go back to 4.1.
 
-### Simpler test cases
-no i can identify simpler cases because i know the solution
+#### Simpler test cases
+As far as I can see, the Sudoku solver problem now is basically solved. It's based on a trial-and-error recursion which is not brute force. That feels right.
+
+Interestingly on my journey towards the soltuion I uncovered several levels of difficulty of Sudoku puzzle. At the outset, without knowing anything about a solution were not visible - but now, with regard to a certain solution, they are.
+
+1. Puzzles which require just constrain-fix passes.
+2. Puzzles which require "manually" fixing cells.
+3. Puzzles which require "manually" fixing in a trial-and-error manner.
+
+Examples for each level have been shown. They can serve as additional test case during an incremental implementation.
+
+#### Data structures
+With the overall behavior creation, i.e. the algorithm sketched I can take a closer look at what role data structures play in it.
+
+A simple `int[,]` matrix certainly is not enough. It's just the means to carry the problem into and the final solution out of the solver.
+
+What has proven helpful is an additional grid where each cell is initialized with possible numbers which then are narrowed down to several candidate numbers and finally to just one solution number. I'll call that a *workbench*:
+
+![](images/ver1/workbench.png)
+
+Its basic structure seems obvious:
+
+```
+class Workbench
+{
+    public class Cell
+    {
+        private List<int> _candidateNumbers;
+    }
+
+    
+    private Cell[,] _cells;
+}
+```
+
+But what functionality should it offer? I think, I don't know yet. I have to refine the algorithm first. At least its first increment.
+
+#### Data flow
+The first increment of the algorithm is straightforward:
+
+![](images/design1.png)
+
+Yes, that's straightforward for me, even though it's cryptic for everyone else. But that's mostly due to my handwriting. More importantly the visual notation is trivial, but very helpful to clarify my thinking: it shows the transformation of the puzzle into a solution as a nested data flow and at the same time assigns the steps to modules.
+
+The workbench plays a key role in this. It's at the beginning and end of the process. First it inflates itself from the puzzle matrix, finally it serializes itself into a solution matrix. Since the workbench is a matrix like the puzzle is, I think it's ok to assign this mapping functionality to the workbench. If that later should prove detrimental to evolving the code I can easily extract these responsibilies.
+
+```
+class Workbench
+{
+    public class Cell {
+        private List<int> _candidateNumbers;
+    }
+    
+    private Cell[,] _cells;
+    
+    
+    public Workbench(int[,] matrix) {}
+    
+    public int[,] Matrix { get; }
+}
+```
+
+Solving the puzzle thus at the top level of abstraction works on an `int[,]` matrix, but in reality it works in a `Workbench`. This is why another `Solve` is sitting between two `Workbench` process steps.
+
+```
+public class SudokuSolver
+{
+    // high level
+    public static int[,] Solve(int[,] puzzle) { ... }
+    
+    // lower leveler
+    void Solve(Workbench workbench) {}
+}
+```
+
+What else is needed from a workbench? The solver first wants to constrain cells and then fix them and then check if a solution has been found.
+
+As it turns out, fixing is trivial: a workbench cell can be asked tell if it's fixed already, that means contains only a final candidate number. Hence fixing does not even need to be an explicit step in the process.
+
+But the solver needs to be able to determine which cells have been fixed and if any unfixed are left. That again can be a responsibility of the workbench. It's easily done and a purely structural question.
+
+The fixed cells are also of interest for the constraining process step. For each fixed cell it wants to remove its solution number from all cells in its horizon.
+
+```
+class Workbench
+{
+    public class Cell {
+        private List<int> _candidateNumbers;
+        
+        public bool IsFixed { get; }
+        public int SolutionNumber { get; }
+        
+        public void RemoveCandidate(int number) {}
+    }
+
+    private Cell[,] _cells;
+    
+    
+    public Workbench(int[,] matrix) {}
+    
+    public Cell[] Fixed { get; }
+    public Cell[] Unfixed { get; }
+    
+    public Cell[] Horizon(Cell center) { ... }
+    
+    public int[,] Matrix { get; }
+}
+```
+
+This makes the Sudoku solver pretty simple. The flow shown above can be translated easily into functions and even integrations.
+
+```
+public class SudokuSolver
+{
+    public static int[,] Solve(int[,] puzzle) {
+        var wb = new Workbench(puzzle);
+        Solve(wb);
+        return wb.Matrix;
+    }
+
+    static void Solve(Workbench workbench) {
+        while (SolutionFound() is false)
+            Constrain(workbench);
+
+        bool SolutionFound() => workbench.Unfixed.Length == 0;
+    }
+
+    static void Constrain(Workbench workbench) {
+        foreach (var fixedCell in workbench.Fixed)
+            foreach (var horizonCell in workbench.Horizon(fixedCell))
+                horizonCell.RemoveCandidate(fixedCell.SolutionNumber);
+    }
+}
+```
+
+Please note how the recursion in the data flow is replaced by a simple `while` loop. In a data flow there are not loops (data flowing back upstream); instead recursive steps are used. But when encoding a data flow that can be replaced with a loop, if it does not make testing or understanding harder.
+
+Initially, I'd say, there is not even anything to test, except the root function. The incremental tests defined above will do the job just fine. I just have to be careful to only apply the level 1 test since a level 2 puzzle will let the solution go into an infinite loop.-
+
+Now it's clear: the workhorse is the `Workbench` class. I need to build it function by function. No further design is needed, I guess.
+
+## Implementation 1
+
+
+
 
 
 ## Retrospective
 
 
 Implementing acceptance tests required some programmimng for `SolutionChecker{}`. It was small problem of its own.
+
+data structure in co-evolution with behavior.
+first behavior then data structures. which functionality to assign to data structures.
+
+wait for behavior because only the you know what functionality is really needed on a data structure. otherwise there is a tendency to over generalize (an optimization for an uncertain future).
 
 
