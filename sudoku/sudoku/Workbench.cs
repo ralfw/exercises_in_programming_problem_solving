@@ -1,41 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 
 namespace sudoku
 {
-    public class Workbench_test
-    {
-        [Fact]
-        public void Cell() {
-            var sut = new Workbench.Cell(3);
-            
-            Assert.False(sut.IsFixed);
-            
-            sut.RemoveCandidate(3);
-            Assert.False(sut.IsFixed);
-            
-            sut.RemoveCandidate(2);
-            Assert.True(sut.IsFixed);
-            Assert.Equal(1, sut.SolutionNumber);
-            
-            sut.RemoveCandidate(3);
-            Assert.True(sut.IsFixed);
-            
-            sut.RemoveCandidate(1);
-            Assert.False(sut.IsFixed);
-        }
-    }
-    
-    
     class Workbench
     {
-        public class Cell {
+        public class Cell
+        {
             private readonly List<int> _candidateNumbers;
 
-            public Cell(int n) {
-                _candidateNumbers = new List<int>(Enumerable.Range(1,n));
+            public Cell(int n)
+            {
+                _candidateNumbers = new List<int>(Enumerable.Range(1, n));
             }
 
             public bool IsFixed => _candidateNumbers.Count == 1;
@@ -43,15 +20,30 @@ namespace sudoku
 
             public void RemoveCandidate(int number) => _candidateNumbers.Remove(number);
         }
-    
-        
+
+
         private Cell[,] _cells;
-        
-        
-        public Workbench(int[,] matrix) {}
-        
-        public Cell[] Fixed { get; }
-        public Cell[] Unfixed { get; }
+
+
+        public Workbench(int[,] matrix) {
+            var nxn = matrix.GetLength(0) * matrix.GetLength(1);
+
+            _cells = new Cell[matrix.GetLength(0), matrix.GetLength(1)];
+            foreach (var coord in AllCoordinates())
+                _cells[coord.row, coord.col] = new Cell(nxn);
+        }
+
+        private IEnumerable<(int row, int col)> AllCoordinates() { 
+            for(var row= 0; row<_cells.GetLength(0); row++)
+            for(var col= 0; col<_cells.GetLength(1); col++)
+                yield return (row, col);
+        }
+
+        private IEnumerable<Cell> AllCells() 
+            => AllCoordinates().Select(coord => _cells[coord.row, coord.col]);
+
+        public Cell[] Fixed => AllCells().Where(cell => cell.IsFixed).ToArray();
+        public Cell[] Unfixed => AllCells().Where(cell => cell.IsFixed is false).ToArray();
         
         public Cell[] Horizon(Cell center) { throw new NotImplementedException(); }
         
