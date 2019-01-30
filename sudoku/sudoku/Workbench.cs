@@ -47,6 +47,13 @@ namespace sudoku
         
         public Cell[] Horizon(Cell center) { throw new NotImplementedException(); }
         
-        public int[,] Matrix { get; }
+        public int[,] Matrix { 
+            get {
+                var matrix = new int[_cells.GetLength(0), _cells.GetLength(1)];
+                foreach (var coord in AllCoordinates())
+                    matrix[coord.row, coord.col] = _cells[coord.row, coord.col].SolutionNumber;
+                return matrix;
+            }
+        }
     }
 }
