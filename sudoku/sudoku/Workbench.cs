@@ -6,8 +6,7 @@ namespace sudoku
 {
     class Workbench
     {
-        public class Cell
-        {
+        public class Cell {
             private readonly List<int> _candidateNumbers;
 
             public Cell(int n)
@@ -27,18 +26,27 @@ namespace sudoku
 
         public Workbench(int[,] matrix) {
             var nxn = matrix.GetLength(0) * matrix.GetLength(1);
+            
+            Initialize();
+            PlaceGivenNumbers();
 
-            _cells = new Cell[matrix.GetLength(0), matrix.GetLength(1)];
-            foreach (var coord in AllCoordinates()) {
-                var cell = new Cell(nxn);
-                _cells[coord.row, coord.col] = cell;
-                
-                var givenNumber = matrix[coord.row, coord.col];
-                foreach (var i in Enumerable.Range(1,nxn))
-                    if (i != givenNumber) cell.RemoveCandidate(i);
+
+            void Initialize() {
+                _cells = new Cell[matrix.GetLength(0), matrix.GetLength(1)];
+                foreach (var coord in AllCoordinates())
+                    _cells[coord.row, coord.col] = new Cell(nxn);   
+            }
+
+            void PlaceGivenNumbers() {
+                foreach (var coord in AllCoordinates()) {
+                    var givenNumber = matrix[coord.row, coord.col];
+                    foreach (var i in Enumerable.Range(1,nxn))
+                        if (i != givenNumber) _cells[coord.row,coord.col].RemoveCandidate(i);
+                }
             }
         }
 
+        
         private IEnumerable<(int row, int col)> AllCoordinates() { 
             for(var row= 0; row<_cells.GetLength(0); row++)
             for(var col= 0; col<_cells.GetLength(1); col++)
