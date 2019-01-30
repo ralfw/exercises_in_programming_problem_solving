@@ -1,3 +1,4 @@
+using System.Linq;
 using Xunit;
 
 namespace sudoku
@@ -47,6 +48,26 @@ namespace sudoku
                 {2,4},
                 {3,1}
             }, sut.Matrix);
+        }
+
+
+        [Fact]
+        public void Workbench_initialization()
+        {
+            var puzzle = new[,] {
+                {0,0, 2,0},
+                {1,0, 0,3},
+                
+                {0,1, 3,4},
+                {2,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
+            
+            Assert.Equal(7, sut.Fixed.Length);
+            Assert.Equal(9, sut.Unfixed.Length);
+
+            var fixedNumbers = sut.Fixed.Select(f => f.SolutionNumber);
+            Assert.Equal(new[]{2,1,3,1,3,4,2}, fixedNumbers);
         }
         
         

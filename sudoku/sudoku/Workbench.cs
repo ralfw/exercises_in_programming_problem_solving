@@ -29,8 +29,14 @@ namespace sudoku
             var nxn = matrix.GetLength(0) * matrix.GetLength(1);
 
             _cells = new Cell[matrix.GetLength(0), matrix.GetLength(1)];
-            foreach (var coord in AllCoordinates())
-                _cells[coord.row, coord.col] = new Cell(nxn);
+            foreach (var coord in AllCoordinates()) {
+                var cell = new Cell(nxn);
+                _cells[coord.row, coord.col] = cell;
+                
+                var givenNumber = matrix[coord.row, coord.col];
+                foreach (var i in Enumerable.Range(1,nxn))
+                    if (i != givenNumber) cell.RemoveCandidate(i);
+            }
         }
 
         private IEnumerable<(int row, int col)> AllCoordinates() { 
