@@ -1,8 +1,9 @@
 using System.Data;
+using System.Diagnostics;
 
 namespace sudoku
 {
-    public class SudokuSolver
+    public static class SudokuSolver
     {
         public static int[,] Solve(int[,] puzzle) {
             var wb = new Workbench(puzzle);

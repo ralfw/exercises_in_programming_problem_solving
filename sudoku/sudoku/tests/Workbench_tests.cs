@@ -7,46 +7,55 @@ namespace sudoku.tests
     {
         [Fact]
         public void Initially_all_cells_unfixed() {
-            var sut = new Workbench(new[,] {
-                {0,0},
-                {0,0}
-            });
-            Assert.Equal(4, sut.Unfixed.Length);
+            var puzzle = new[,] {
+                {0,0, 0,0},
+                {0,0, 0,0},
+                
+                {0,0, 0,0},
+                {0,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
+            Assert.Equal(16, sut.Unfixed.Length);
             Assert.Empty(sut.Fixed);
         }
         
         [Fact]
         public void Matrix_generation() {
-            var sut = new Workbench(new[,] {
-                {0,0},
-                {0,0}
-            });
+            var puzzle = new[,] {
+                {0,0, 0,0},
+                {0,0, 0,0},
+                
+                {0,0, 0,0},
+                {0,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
 
             var cells = sut.Unfixed;
+            cells[0].RemoveCandidate(2);
+            cells[0].RemoveCandidate(3);
             cells[0].RemoveCandidate(4);
-            cells[0].RemoveCandidate(1);
-            cells[0].RemoveCandidate(3); // leave 2
-            Assert.Single(sut.Fixed);
+            Assert.Single(sut.Fixed); // 1 left
             
-            cells[1].RemoveCandidate(2);
+            cells[1].RemoveCandidate(1);
             cells[1].RemoveCandidate(3);
-            cells[1].RemoveCandidate(1); // leave 4
-            Assert.Equal(2, sut.Fixed.Length);
-            
-            cells[2].RemoveCandidate(2);
-            cells[2].RemoveCandidate(4);
-            cells[2].RemoveCandidate(1); // leave 3
-            Assert.Equal(3, sut.Fixed.Length);
-            
-            cells[3].RemoveCandidate(4);
-            cells[3].RemoveCandidate(2);
-            cells[3].RemoveCandidate(3); // leave 1
-            Assert.Equal(4, sut.Fixed.Length);
+            cells[1].RemoveCandidate(4);
+            Assert.Equal(2, sut.Fixed.Length); // 2 left
+
+            foreach (var cell in cells.Skip(2)) {
+                cell.RemoveCandidate(1);
+                cell.RemoveCandidate(2);
+                cell.RemoveCandidate(3);
+            } // 4 left
+
+            Assert.Equal(16, sut.Fixed.Length);
             Assert.Empty(sut.Unfixed);
             
             Assert.Equal(new[,] {
-                {2,4},
-                {3,1}
+                {1,2, 4,4},
+                {4,4, 4,4},
+                
+                {4,4, 4,4},
+                {4,4, 4,4}
             }, sut.Matrix);
         }
 
@@ -68,6 +77,27 @@ namespace sudoku.tests
 
             var fixedNumbers = sut.Fixed.Select(f => f.SolutionNumber);
             Assert.Equal(new[]{2,1,3,1,3,4,2}, fixedNumbers);
+        }
+        
+        
+        [Fact]
+        public void Cells_initialized_with_correct_number_range()
+        {
+            var puzzle = new[,] {
+                {0,0, 2,0},
+                {1,0, 0,3},
+                
+                {0,1, 3,4},
+                {2,0, 0,0}
+            };
+            var sut = new Workbench(puzzle);
+
+            var cell = sut.Unfixed.First();
+            cell.RemoveCandidate(2);
+            cell.RemoveCandidate(1);
+            cell.RemoveCandidate(4);
+            Assert.True(cell.IsFixed);
+            Assert.Equal(3, cell.SolutionNumber);
         }
         
         

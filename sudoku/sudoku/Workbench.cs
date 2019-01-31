@@ -18,32 +18,42 @@ namespace sudoku
             public bool IsFixed => _candidateNumbers.Count == 1;
             public int SolutionNumber => _candidateNumbers.First();
 
-            public void RemoveCandidate(int number) => _candidateNumbers.Remove(number);
+            public void RemoveCandidate(int number)
+            {
+                _candidateNumbers.Remove(number);
+                Debug.WriteLine($"  {this.GetHashCode()}:{_candidateNumbers.Count}");
+            }
         }
 
 
         private Cell[,] _cells;
 
 
-        public Workbench(int[,] matrix) {
-            var nxn = matrix.GetLength(0) * matrix.GetLength(1);
+        public Workbench(int[,] matrix)
+        {
+            var size = Calc_size_for_any_matrix();
             
             Initialize();
             PlaceGivenNumbers();
 
 
+            int Calc_size_for_any_matrix() // this also works for non-square matrices
+                => (int) Math.Sqrt(matrix.GetLength(0)) * (int) Math.Sqrt(matrix.GetLength(1));
+
+            
             void Initialize() {
                 _cells = new Cell[matrix.GetLength(0), matrix.GetLength(1)];
                 foreach (var coord in AllCoordinates())
-                    _cells[coord.row, coord.col] = new Cell(nxn);   
+                    _cells[coord.row, coord.col] = new Cell(size);   
             }
 
+            
             void PlaceGivenNumbers() {
                 foreach (var coord in AllCoordinates()) {
                     var givenNumber = matrix[coord.row, coord.col];
                     if (givenNumber == 0) continue;
                     
-                    foreach (var i in Enumerable.Range(1,nxn))
+                    foreach (var i in Enumerable.Range(1,size))
                         if (i != givenNumber) _cells[coord.row,coord.col].RemoveCandidate(i);
                 }
             }
