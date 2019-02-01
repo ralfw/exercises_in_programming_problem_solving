@@ -17,11 +17,10 @@ namespace sudoku
 
             public bool IsFixed => _candidateNumbers.Count == 1;
             public int SolutionNumber => _candidateNumbers.First();
+            public int[] CandidateNumbers => _candidateNumbers.ToArray();
 
-            public void RemoveCandidate(int number)
-            {
+            public void RemoveCandidate(int number) {
                 _candidateNumbers.Remove(number);
-                Debug.WriteLine($"  {this.GetHashCode()}:{_candidateNumbers.Count}");
             }
         }
 
