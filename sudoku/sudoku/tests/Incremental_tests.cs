@@ -21,14 +21,14 @@ namespace sudoku.tests
         }
         
         
-        [Fact(Skip = "too difficult")]
+        [Fact()]
         public void Level2()
         {
             var puzzle = new[,] {
                 {0,2, 0,0},
-                {3,0, 0,2},
+                {0,0, 0,0},
                 
-                {0,1, 0,3},
+                {0,0, 0,3},
                 {4,0, 0,0}
             };
 
@@ -42,7 +42,7 @@ namespace sudoku.tests
         public void Level3()
         {
             var puzzle = new[,] {
-                {6,0,0, 0,0,1, 4,8,1},
+                {6,0,0, 0,0,1, 4,8,0},
                 {0,0,0, 0,0,0, 0,0,0},
                 {2,0,0, 0,0,0, 6,0,5},
                 
