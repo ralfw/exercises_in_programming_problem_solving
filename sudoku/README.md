@@ -428,6 +428,8 @@ static void Solve(Workbench workbench) {
 ## Implementation 3
 some refactoring first making Solve() more straightfwd.
 
+cloning workbench for recursive trials.
+
 
 ## Retrospective
 

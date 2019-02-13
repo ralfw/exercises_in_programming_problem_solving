@@ -189,5 +189,46 @@ namespace sudoku.tests
             sut.RemoveCandidate(1);
             Assert.False(sut.IsFixed);
         }
+
+
+        [Fact]
+        public void Cell_clone() {
+            var sut = new Workbench.Cell(4);
+            sut.RemoveCandidate(1);
+            sut.RemoveCandidate(4);
+
+            var result = sut.Clone();
+            
+            Assert.NotSame(sut, result);
+            Assert.Equal(new[]{2,3}, result.CandidateNumbers);
+
+            result.RemoveCandidate(2);
+            Assert.True(result.IsFixed);
+            Assert.False(sut.IsFixed);
+        }
+
+        [Fact]
+        public void Workbench_clone()
+        {
+            var puzzle = new[,] {
+                {0,2, 3,4},
+                {3,4, 1,2},
+                
+                {2,1, 4,3},
+                {4,3, 2,1}
+            };
+            var sut = new Workbench(puzzle);
+
+            var result = sut.Clone();
+            Assert.NotSame(sut, result);
+            Assert.Equal(sut.Fixed.Length, result.Fixed.Length);
+            
+            result.Unfixed.First().RemoveCandidate(2);
+            result.Unfixed.First().RemoveCandidate(3);
+            result.Unfixed.First().RemoveCandidate(4);
+            
+            Assert.Single(sut.Unfixed);
+            Assert.Empty(result.Unfixed);
+        }
     }
 }

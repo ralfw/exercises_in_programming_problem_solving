@@ -10,10 +10,8 @@ namespace sudoku
         public class Cell {
             private readonly List<int> _candidateNumbers;
 
-            public Cell(int n)
-            {
-                _candidateNumbers = new List<int>(Enumerable.Range(1, n));
-            }
+            public Cell(int n) : this(Enumerable.Range(1, n)) {}
+            private Cell(IEnumerable<int> candidateNumbers) => _candidateNumbers = new List<int>(candidateNumbers);
 
             public bool IsFixed => _candidateNumbers.Count == 1;
             public int SolutionNumber => _candidateNumbers.First();
@@ -22,12 +20,16 @@ namespace sudoku
             public void RemoveCandidate(int number) {
                 _candidateNumbers.Remove(number);
             }
+
+            public Cell Clone() => new Cell(_candidateNumbers);
         }
 
 
         private Cell[,] _cells;
 
 
+        private Workbench(Cell[,] cells) => _cells = cells;
+        
         public Workbench(int[,] matrix)
         {
             var size = Calc_size_for_any_matrix();
@@ -118,6 +120,14 @@ namespace sudoku
                     matrix[coord.row, coord.col] = _cells[coord.row, coord.col].SolutionNumber;
                 return matrix;
             }
+        }
+
+
+        public Workbench Clone() {
+            var clonedCells = (Cell[,])_cells.Clone();
+            foreach (var coord in AllCoordinates())
+                clonedCells[coord.row, coord.col] = clonedCells[coord.row, coord.col].Clone();
+            return new Workbench(clonedCells);
         }
     }
 }
