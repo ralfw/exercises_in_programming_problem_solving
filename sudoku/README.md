@@ -228,7 +228,7 @@ The algorithm has to be extended:
   2. Start again at 2 (recursion).
 
 #### Smart algorithm v3
-So far puzzle could be solved by trying an arbitrary fix in the case of a stand-still. But what if this fix does not lead to a solution? Since the fix is arbitrary there's no guarantee to pick a candidate number which is the solution number.
+So far puzzles could be solved by trying an arbitrary fix in the case of a stand-still. But what if this fix does not lead to a solution? Since the fix is arbitrary there's no guarantee to pick a candidate number which is the solution number.
 
 The algorithm has to be prepared for the error in trial-and-error.
 
@@ -402,8 +402,31 @@ Now it's clear: the workhorse is the `Workbench` class. I need to build it funct
 
 ## Implementation 1
 
+impl for level 1 was straightforward
 
+## Implementation 2
+for level 2 some more functionality on Cell needed
+level 2 initially the test was wrong; same for level 3. realized it because level 2 was unexpectedly green as soon as level 1 turned green.
 
+for level 2 Solve(Workbench) go a bit more complicated. i used local functions to keep it clean on a hi level:
+
+```
+static void Solve(Workbench workbench) {
+    var n_fixed_before_pass = workbench.Fixed.Length;
+    
+    while (SolutionFound() is false) {
+        Constrain(workbench);
+        Trial_required(() => {
+            Fix_first_unfixed_cell();
+            Solve(workbench);
+        });
+    }
+    ...
+}
+```
+
+## Implementation 3
+some refactoring first making Solve() more straightfwd.
 
 
 ## Retrospective

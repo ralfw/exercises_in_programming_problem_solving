@@ -38,7 +38,7 @@ namespace sudoku.tests
         }
         
         
-        [Fact(Skip = "too difficult")]
+        [Fact()]
         public void Level3()
         {
             var puzzle = new[,] {

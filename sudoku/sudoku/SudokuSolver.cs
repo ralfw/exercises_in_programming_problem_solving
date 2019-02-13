@@ -11,31 +11,20 @@ namespace sudoku
     {
         public static int[,] Solve(int[,] puzzle) {
             var wb = new Workbench(puzzle);
-            Solve(wb);
-            return wb.Matrix;
+            return Solve(wb).Matrix;
         }
     
-        static void Solve(Workbench workbench) {
-            var n_fixed_before_pass = workbench.Fixed.Length;
-            
+        static Workbench Solve(Workbench workbench) {
             while (SolutionFound() is false) {
-                Constrain(workbench);
-                Trial_required(() => {
-                    Fix_first_unfixed_cell();
-                    Solve(workbench);
-                });
+                if (Constrain(workbench) > 0) continue;
+                
+                Fix_first_unfixed_cell();
+                workbench = Solve(workbench);
             }
+            return workbench;
 
             
             bool SolutionFound() => workbench.Unfixed.Length == 0;
-
-            void Trial_required(Action onTrial) {
-                if (n_fixed_before_pass == workbench.Fixed.Length) {
-                    onTrial();
-                    return;
-                }
-                n_fixed_before_pass = workbench.Fixed.Length;
-            }
 
             void Fix_first_unfixed_cell() {
                 var toFix = workbench.Unfixed.First();
@@ -44,10 +33,18 @@ namespace sudoku
         }
     
         
-        static void Constrain(Workbench workbench) {
+        internal static int Constrain(Workbench workbench) {
+            var numberOfCellsFixedInThisPass = 0;
+            
             foreach (var fixedCell in workbench.Fixed)
-                foreach (var horizonCell in workbench.Horizon(fixedCell))
-                    horizonCell.RemoveCandidate(fixedCell.SolutionNumber);
+            foreach (var horizonCell in workbench.Horizon(fixedCell)) {
+                if (horizonCell.IsFixed) continue;
+                
+                horizonCell.RemoveCandidate(fixedCell.SolutionNumber);
+                numberOfCellsFixedInThisPass += horizonCell.IsFixed ? 1 : 0;
+            }
+            
+            return numberOfCellsFixedInThisPass;
         }
     }
 }
