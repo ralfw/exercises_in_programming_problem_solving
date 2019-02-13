@@ -190,6 +190,14 @@ namespace sudoku.tests
             Assert.False(sut.IsFixed);
         }
 
+        [Fact]
+        public void Cell_removeCandidatesExcept() {
+            var sut = new Workbench.Cell(3);
+            sut.SolutionNumber = 2;
+            Assert.True(sut.IsFixed);
+            Assert.Equal(2, sut.SolutionNumber);
+        }
+
 
         [Fact]
         public void Cell_clone() {

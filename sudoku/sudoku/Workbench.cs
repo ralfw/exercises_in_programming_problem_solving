@@ -8,18 +8,21 @@ namespace sudoku
     class Workbench
     {
         public class Cell {
-            private readonly List<int> _candidateNumbers;
+            private List<int> _candidateNumbers;
 
             public Cell(int n) : this(Enumerable.Range(1, n)) {}
             private Cell(IEnumerable<int> candidateNumbers) => _candidateNumbers = new List<int>(candidateNumbers);
 
             public bool IsFixed => _candidateNumbers.Count == 1;
-            public int SolutionNumber => _candidateNumbers.First();
+
+            public int SolutionNumber {
+                get => _candidateNumbers.First();
+                set => _candidateNumbers = new List<int>(new[] {value});
+            }
+            
             public int[] CandidateNumbers => _candidateNumbers.ToArray();
 
-            public void RemoveCandidate(int number) {
-                _candidateNumbers.Remove(number);
-            }
+            public void RemoveCandidate(int number) => _candidateNumbers.Remove(number);
 
             public Cell Clone() => new Cell(_candidateNumbers);
         }
@@ -30,10 +33,8 @@ namespace sudoku
 
         private Workbench(Cell[,] cells) => _cells = cells;
         
-        public Workbench(int[,] matrix)
-        {
+        public Workbench(int[,] matrix) {
             var size = Calc_size_for_any_matrix();
-            
             Initialize();
             PlaceGivenNumbers();
 
@@ -70,9 +71,14 @@ namespace sudoku
         private IEnumerable<Cell> AllCells() 
             => AllCoordinates().Select(coord => _cells[coord.row, coord.col]);
 
+
+        public Cell this[int row, int col] => _cells[row, col];
+        
         public Cell[] Fixed => AllCells().Where(cell => cell.IsFixed).ToArray();
+        
         public Cell[] Unfixed => AllCells().Where(cell => cell.IsFixed is false).ToArray();
 
+        
         public Cell[] Horizon(Cell center) {
             var centerCoords = DetermineCoordinates(center);
             return HorizonCoordinates(centerCoords.row, centerCoords.col)
@@ -80,12 +86,14 @@ namespace sudoku
                     .ToArray();
         }
 
-        internal (int row, int col) DetermineCoordinates(Cell cell) {
+        
+        public (int row, int col) DetermineCoordinates(Cell cell) {
             foreach(var coord in AllCoordinates())
                 if (_cells[coord.row, coord.col] == cell)
                     return (coord.row, coord.col);
             throw new InvalidOperationException("Cell not present in workbench!");
         }
+        
         
         internal IEnumerable<(int row, int col)> HorizonCoordinates(int row, int col)
         {
@@ -112,6 +120,7 @@ namespace sudoku
                 if (r != row)
                     yield return (r, col);
         }
+        
         
         public int[,] Matrix { 
             get {

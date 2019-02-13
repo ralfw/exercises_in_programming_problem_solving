@@ -11,24 +11,34 @@ namespace sudoku
     {
         public static int[,] Solve(int[,] puzzle) {
             var wb = new Workbench(puzzle);
-            return Solve(wb).Matrix;
+            
+            var (success, solution) = Solve(wb);
+            
+            if (success) return solution.Matrix;
+            throw new InvalidOperationException("No solution found for puzzle!");
         }
     
-        static Workbench Solve(Workbench workbench)
+        static (bool success, Workbench workbench) Solve(Workbench workbench)
         {
             while (Constrain(workbench) > 0) {}
-            if (SolutionFound()) return workbench;
-                
-            Fix_first_unfixed_cell();
-            return Solve(workbench);
+            if (SolutionFound()) return (true, workbench);
+
+            foreach (var unfixed in workbench.Unfixed) {
+                var (unfixedRow, unfixedCol) = workbench.DetermineCoordinates(unfixed);
+                foreach (var tentativeSolutionNumber in unfixed.CandidateNumbers) {
+                    var tentativeWorkbench = workbench.Clone();
+                    tentativeWorkbench[unfixedRow, unfixedCol].SolutionNumber = tentativeSolutionNumber;
+                    
+                    var (success, solutionWorkbenche) = Solve(tentativeWorkbench);
+                    
+                    if (success) return (true, solutionWorkbenche);
+                }
+            }
+
+            return (false, null);
 
             
             bool SolutionFound() => workbench.Unfixed.Length == 0;
-
-            void Fix_first_unfixed_cell() {
-                var toFix = workbench.Unfixed.First();
-                toFix.CandidateNumbers.Skip(1).ToList().ForEach(toFix.RemoveCandidate);
-            }
         }
     
         

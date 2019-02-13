@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace sudoku.tests
@@ -57,7 +60,21 @@ namespace sudoku.tests
 
             var result = SudokuSolver.Solve(puzzle);
             
+            DumpMatrix(result);
+            
             Assert.True(SolutionChecker.Check(result));
+        }
+
+
+        void DumpMatrix(int[,] matrix) {
+            for (var row = 0; row < matrix.GetLength(0); row++)
+            {
+                Debug.Write($"{row}: ");
+                for (var col = 0; col < matrix.GetLength(1); col++) {
+                    Debug.Write($"{matrix[row,col]} ");
+                }
+                Debug.WriteLine("");
+            }
         }
     }
 }
