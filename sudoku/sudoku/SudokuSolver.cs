@@ -14,14 +14,13 @@ namespace sudoku
             return Solve(wb).Matrix;
         }
     
-        static Workbench Solve(Workbench workbench) {
-            while (SolutionFound() is false) {
-                if (Constrain(workbench) > 0) continue;
+        static Workbench Solve(Workbench workbench)
+        {
+            while (Constrain(workbench) > 0) {}
+            if (SolutionFound()) return workbench;
                 
-                Fix_first_unfixed_cell();
-                workbench = Solve(workbench);
-            }
-            return workbench;
+            Fix_first_unfixed_cell();
+            return Solve(workbench);
 
             
             bool SolutionFound() => workbench.Unfixed.Length == 0;
