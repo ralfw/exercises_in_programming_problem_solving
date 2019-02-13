@@ -20,6 +20,9 @@ namespace sudoku
     
         static (bool success, Workbench workbench) Solve(Workbench workbench)
         {
+            // no candidates left
+            // solution numbers the same in row/col/box
+            
             while (Constrain(workbench) > 0) {}
             if (SolutionFound()) return (true, workbench);
 
@@ -46,7 +49,7 @@ namespace sudoku
             var numberOfCellsFixedInThisPass = 0;
             
             foreach (var fixedCell in workbench.Fixed)
-            foreach (var horizonCell in workbench.Horizon(fixedCell)) {
+            foreach (var horizonCell in workbench.Horizon(fixedCell).All) {
                 if (horizonCell.IsFixed) continue;
                 
                 horizonCell.RemoveCandidate(fixedCell.SolutionNumber);

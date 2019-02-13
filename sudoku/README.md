@@ -235,7 +235,7 @@ The algorithm has to be prepared for the error in trial-and-error.
 From what I can see errors have two forms:
 
 * Applying the constrains leads to a cell with no candidates left.
-* Fixing cells leads to two cells with the same solution number within a cell's *constraint horizon*.
+* Fixing cells leads to two cells with the same solution number within a row, column or box in a cell's *constraint horizon*.
 
 Here's an example for the latter:
 
@@ -429,6 +429,8 @@ static void Solve(Workbench workbench) {
 some refactoring first making Solve() more straightfwd.
 
 cloning workbench for recursive trials.
+
+refactoring workbench: need to access more details for error checking during trial-and-error
 
 
 ## Retrospective

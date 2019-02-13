@@ -114,12 +114,12 @@ namespace sudoku.tests
             var sut = new Workbench(puzzle);
 
             var horizon = sut.Horizon(sut.Fixed[2]); // 2 in upper right box
-            Assert.Equal(9, horizon.Length);
+            Assert.Equal(9, horizon.All.Count());
             
-            Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 4);
-            Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 3);
-            Assert.Contains(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 1);
-            Assert.DoesNotContain(horizon.Where(c => c.IsFixed), c => c.SolutionNumber == 2);
+            Assert.Contains(horizon.All.Where(c => c.IsFixed), c => c.SolutionNumber == 4);
+            Assert.Contains(horizon.All.Where(c => c.IsFixed), c => c.SolutionNumber == 3);
+            Assert.Contains(horizon.All.Where(c => c.IsFixed), c => c.SolutionNumber == 1);
+            Assert.DoesNotContain(horizon.All.Where(c => c.IsFixed), c => c.SolutionNumber == 2);
         }
 
         [Fact]
@@ -145,28 +145,6 @@ namespace sudoku.tests
             (row, col) = sut.DetermineCoordinates(sut.Fixed[5]);
             Assert.Equal(2, row);
             Assert.Equal(3, col);
-        }
-        
-        [Fact]
-        public void __Horizon_coords_calculation()
-        {
-            var puzzle = new[,] {
-                {0,0, 0,3},
-                {1,0, 2,4},
-                
-                {0,1, 3,2},
-                {2,0, 0,0}
-            };
-            var sut = new Workbench(puzzle);
-
-            var result = sut.HorizonCoordinates(2, 3).ToArray();
-            Assert.Equal(9, result.Length);
-            
-            Assert.Equal(new[] {
-                (2,2),(3,2),(3,3), // box
-                (2,0),(2,1),(2,2), // row
-                (0,3),(1,3),(3,3)  // col
-            }, result);
         }
         
         

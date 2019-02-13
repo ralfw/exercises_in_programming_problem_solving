@@ -27,6 +27,24 @@ namespace sudoku
             public Cell Clone() => new Cell(_candidateNumbers);
         }
 
+        
+        public class CellHorizon
+        {
+            public Cell Origin { get; }
+            public IEnumerable<Cell> Row { get; }
+            public IEnumerable<Cell> Col { get; }
+            public IEnumerable<Cell> Box { get; }
+
+            public IEnumerable<Cell> All => Row.Concat(Col).Concat(Box);
+
+            public CellHorizon(Cell origin, IEnumerable<Cell> row, IEnumerable<Cell> col, IEnumerable<Cell> box) {
+                Origin = origin;
+                Row = row;
+                Col = col;
+                Box = box;
+            }
+        }
+
 
         private Cell[,] _cells;
 
@@ -79,11 +97,19 @@ namespace sudoku
         public Cell[] Unfixed => AllCells().Where(cell => cell.IsFixed is false).ToArray();
 
         
-        public Cell[] Horizon(Cell center) {
-            var centerCoords = DetermineCoordinates(center);
-            return HorizonCoordinates(centerCoords.row, centerCoords.col)
-                    .Select(coord => _cells[coord.row, coord.col])
-                    .ToArray();
+        public CellHorizon Horizon(Cell origin) {
+            var (row, col) = DetermineCoordinates(origin);
+            
+            return new CellHorizon(
+                origin,
+                Map(RowCoordinates(row, col)),
+                Map(ColCoordinates(row, col)),
+                Map(BoxCoordinates(row, col))
+            );
+
+            
+            IEnumerable<Cell> Map(IEnumerable<(int row, int col)> coords)
+                => coords.Select(coord => _cells[coord.row, coord.col]);
         }
 
         
@@ -95,9 +121,21 @@ namespace sudoku
         }
         
         
-        internal IEnumerable<(int row, int col)> HorizonCoordinates(int row, int col)
+        IEnumerable<(int row, int col)> RowCoordinates(int row, int col) {
+            for (var c = 0; c < _cells.GetLength(1); c++)
+                if (c != col)
+                    yield return (row, c);
+        }
+        
+        IEnumerable<(int row, int col)> ColCoordinates(int row, int col) {
+            // column coordinates
+            for (var r = 0; r < _cells.GetLength(0); r++)
+                if (r != row)
+                    yield return (r, col);
+        }
+        
+        IEnumerable<(int row, int col)> BoxCoordinates(int row, int col)
         {
-            // box coordinates
             var boxHeight = (int)Math.Sqrt(_cells.GetLength(0));
             var boxWidth = (int) Math.Sqrt(_cells.GetLength(1));
             var boxTop = row / boxHeight * boxHeight;
@@ -109,16 +147,6 @@ namespace sudoku
                 if ((r == row && c == col) is false)
                     yield return (r, c);
             }
-
-            // row coordinates
-            for (var c = 0; c < _cells.GetLength(1); c++)
-                if (c != col)
-                    yield return (row, c);
-            
-            // column coordinates
-            for (var r = 0; r < _cells.GetLength(0); r++)
-                if (r != row)
-                    yield return (r, col);
         }
         
         
