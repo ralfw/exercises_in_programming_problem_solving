@@ -14,8 +14,8 @@ namespace sudoku.tests
                 {0,3, 2,1}
             };
             var wb = new Workbench(puzzle);
-            
-            var result = SudokuSolver.Constrain(wb);
+
+            Assert.True(SudokuSolver.TryConstrain(wb, out var result));
             
             Assert.Equal(2, result);
         }
@@ -32,7 +32,7 @@ namespace sudoku.tests
             };
             var wb = new Workbench(puzzle);
             
-            var result = SudokuSolver.Constrain(wb);
+            Assert.True(SudokuSolver.TryConstrain(wb, out var result));
             
             Assert.Equal(0, result);
         }

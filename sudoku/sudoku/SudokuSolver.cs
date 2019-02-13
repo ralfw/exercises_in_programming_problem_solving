@@ -20,10 +20,15 @@ namespace sudoku
     
         static (bool success, Workbench workbench) Solve(Workbench workbench)
         {
-            // no candidates left
             // solution numbers the same in row/col/box
-            
-            while (Constrain(workbench) > 0) {}
+            int numberOfCellsFixed;
+            while(true) {
+                if (TryConstrain(workbench, out numberOfCellsFixed) is false)
+                    return (false, null);
+                if (numberOfCellsFixed == 0)
+                    break;
+            }
+
             if (SolutionFound()) return (true, workbench);
 
             foreach (var unfixed in workbench.Unfixed) {
@@ -45,18 +50,24 @@ namespace sudoku
         }
     
         
-        internal static int Constrain(Workbench workbench) {
-            var numberOfCellsFixedInThisPass = 0;
-            
-            foreach (var fixedCell in workbench.Fixed)
-            foreach (var horizonCell in workbench.Horizon(fixedCell).All) {
-                if (horizonCell.IsFixed) continue;
+        internal static bool TryConstrain(Workbench workbench, out int numberOfCellsFixed) {
+            numberOfCellsFixed = 0;
+
+            foreach (var fixedCell in workbench.Fixed) {
+                var horizon = workbench.Horizon(fixedCell);
                 
-                horizonCell.RemoveCandidate(fixedCell.SolutionNumber);
-                numberOfCellsFixedInThisPass += horizonCell.IsFixed ? 1 : 0;
+                foreach (var horizonCell in horizon.All) {
+                    if (horizonCell.IsFixed) continue;
+
+                    horizonCell.RemoveCandidate(fixedCell.SolutionNumber);
+                    if (horizonCell.CandidateNumbers.Length == 0) return false;
+
+                    numberOfCellsFixed += horizonCell.IsFixed ? 1 : 0;
+                }
+                
+                
             }
-            
-            return numberOfCellsFixedInThisPass;
+            return true;
         }
     }
 }
