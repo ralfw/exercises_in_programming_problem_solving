@@ -37,6 +37,7 @@ namespace sudoku
                 foreach (var unfixed in workbench.Unfixed) {
                     var (unfixedRow, unfixedCol) = workbench.DetermineCoordinates(unfixed);
                     foreach (var tentativeSolutionNumber in unfixed.CandidateNumbers) {
+                        //TODO: Optimize - Cloning for every trial is an expensive operation
                         var tentativeWorkbench = workbench.Clone();
                         tentativeWorkbench[unfixedRow, unfixedCol].SolutionNumber = tentativeSolutionNumber;
                     

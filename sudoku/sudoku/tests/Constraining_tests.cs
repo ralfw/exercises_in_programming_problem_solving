@@ -52,14 +52,6 @@ namespace sudoku.tests
             var wb = new Workbench(puzzle);
             
             Assert.Equal(Constraining.Status.Failure, Constraining.Constrain(wb));
-
-            void Focus(int row, int col, int[] candidates) {
-                var c = wb[row, col];
-                var n = puzzle.GetLength(0);
-                for(var i = 1; i<=n; i++)
-                    if (!candidates.Contains(i))
-                        c.RemoveCandidate(i);
-            }
         }
     }
 }

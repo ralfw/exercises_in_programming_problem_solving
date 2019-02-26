@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace sudoku.tests
 {
-    static class SolutionChecker
+    public static class SolutionChecker
     {
         public static bool Check(int[,] sln)
             => CheckBoxes(sln) && CheckRows(sln) && CheckCols(sln);

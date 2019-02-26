@@ -20,7 +20,7 @@ namespace sudoku
             return Status.Success;
         }
 
-        
+        //TODO: Optimize - Limit to just the latest cells which got fixed (cells could be marked as having been used for constraining)
         static IEnumerable<(Workbench.CellHorizon horizon, int solutionNumber)> Collect_horizons(Workbench workbench) 
             => workbench.Fixed.Select(fc => (workbench.Horizon(fc), fc.SolutionNumber));
         
