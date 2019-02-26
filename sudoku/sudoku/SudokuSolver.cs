@@ -15,32 +15,38 @@ namespace sudoku
             throw new InvalidOperationException("No solution found for puzzle!");
         }
     
-        static (bool success, Workbench workbench) Solve(Workbench workbench)
-        {
-            while(true) {
-                var status = Constraining.Constrain(workbench);
-                if (status == Constraining.Status.Failure) return (false, null);
-                if (status == Constraining.Status.DeadEnd) break;
-            }
-
+        static (bool success, Workbench workbench) Solve(Workbench workbench) {
+            if (Constrain() is false) return (false, null);
             if (SolutionFound()) return (true, workbench);
-
-            foreach (var unfixed in workbench.Unfixed) {
-                var (unfixedRow, unfixedCol) = workbench.DetermineCoordinates(unfixed);
-                foreach (var tentativeSolutionNumber in unfixed.CandidateNumbers) {
-                    var tentativeWorkbench = workbench.Clone();
-                    tentativeWorkbench[unfixedRow, unfixedCol].SolutionNumber = tentativeSolutionNumber;
-                    
-                    var (success, solutionWorkbenche) = Solve(tentativeWorkbench);
-                    
-                    if (success) return (true, solutionWorkbenche);
-                }
-            }
-
-            return (false, null);
+            return While_a_cell_can_be_fixed(
+                        Solve);
 
             
+            bool Constrain() {
+                while(true) {
+                    var status = Constraining.Constrain(workbench);
+                    if (status == Constraining.Status.Failure) return false;
+                    if (status == Constraining.Status.DeadEnd) break;
+                }
+                return true;
+            }
+            
             bool SolutionFound() => workbench.Unfixed.Length == 0;
+            
+            (bool success, Workbench workbench) While_a_cell_can_be_fixed(Func<Workbench, (bool success, Workbench workbench)> onTryAgain) {
+                foreach (var unfixed in workbench.Unfixed) {
+                    var (unfixedRow, unfixedCol) = workbench.DetermineCoordinates(unfixed);
+                    foreach (var tentativeSolutionNumber in unfixed.CandidateNumbers) {
+                        var tentativeWorkbench = workbench.Clone();
+                        tentativeWorkbench[unfixedRow, unfixedCol].SolutionNumber = tentativeSolutionNumber;
+                    
+                        var (success, solutionWorkbenche) = onTryAgain(tentativeWorkbench);
+                    
+                        if (success) return (true, solutionWorkbenche);
+                    }
+                }
+                return (false, null);
+            }
         }
     }
 }

@@ -432,6 +432,10 @@ cloning workbench for recursive trials.
 
 refactoring workbench: need to access more details for error checking during trial-and-error
 
+contraining rausgelöst
+
+bug beim feststellen von non-unique fixes: ich initialisiere das dict falsch. dafür habe ich im detail aber keinen test. mist.
+
 
 ## Retrospective
 
