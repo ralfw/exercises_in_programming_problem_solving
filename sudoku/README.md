@@ -402,13 +402,14 @@ Now it's clear: the workhorse is the `Workbench` class. I need to build it funct
 
 ## Implementation 1
 
-impl for level 1 was straightforward
+The implementation of the level 1 solution went straightforward.
 
 ## Implementation 2
-for level 2 some more functionality on Cell needed
-level 2 initially the test was wrong; same for level 3. realized it because level 2 was unexpectedly green as soon as level 1 turned green.
+For level 2 there was some more functionality on the Cell needed.
 
-for level 2 Solve(Workbench) go a bit more complicated. i used local functions to keep it clean on a hi level:
+Also the level 2 test initially was wrong; same for level 3. I realized it because level 2 was unexpectedly green as soon as level 1 turned green. You really have to be careful not only when doing the production code.
+
+For level 2 `Solve(Workbench)` go a bit more complicated. I used local functions to keep it clean on a high level:
 
 ```
 static void Solve(Workbench workbench) {
@@ -426,25 +427,25 @@ static void Solve(Workbench workbench) {
 ```
 
 ## Implementation 3
-some refactoring first making Solve() more straightfwd.
+The level 3 implementation took me a while.
 
-cloning workbench for recursive trials.
+First some refactoring was in order to make `Solve()` more straightfwd.
 
-refactoring workbench: need to access more details for error checking during trial-and-error
+The I needed to implement cloning a workbench for recursive trials. That was not difficult, but, well, it a bit.
 
-contraining rausgelöst
+In addition it turned out that the workbend also needed some refactoring, because I needed to access more details during error checking in the trial-and-error phase. In particular the constraint horizon had to differentiated in its row, column, and box.
 
-bug beim feststellen von non-unique fixes: ich initialisiere das dict falsch. dafür habe ich im detail aber keinen test. mist.
+Then constraining needed to be more informative as to why it failed: was there nothing to fix or did fixing lead to inconsistencies? I extracted it into its own class to be able to keep its tests. This also seemed appropriate because constraining really is the heart of the whole algorithm.
 
+And in the end I ran into a bug which took me some time to fix. It was simple, but eluded me right when I though the overall solution was done: the problem was an incorrect dictionary initialization in a method for which I had no test. That's the penalty for thinking something is so simple it doesn't need a test.
 
 ## Retrospective
+This really was a challenge. Not so much the implementation, but first getting the solution approach right. Finding the conditions to terminate a branch during recursive descent took some time.
 
+Also the size of (realistic) puzzles required some additional infrastructure for testing. I needed to implement a `SolutionChecker{}`, since I did not know what the exact solution to a puzzle would be. It was small problem of its own.
 
-Implementing acceptance tests required some programmimng for `SolutionChecker{}`. It was small problem of its own.
+Also noteworthy: the data structures (`Workbench`, `Cell`, `CellHorizon`) went through a co-evolution with the behavior. But sticking to behavior-first did the trick. First design the steps which need to be taken, then assign behavior to data structures. Otherwise there's a tendency to over-generalize data structure behavior (for uncertain future use) and keep it on a too low level.
 
-data structure in co-evolution with behavior.
-first behavior then data structures. which functionality to assign to data structures.
-
-wait for behavior because only the you know what functionality is really needed on a data structure. otherwise there is a tendency to over generalize (an optimization for an uncertain future).
+Finally: Too me this clearly is no problem to tackle with TDD. It requires serious thinking and experimentation. And I would never drive the implementation through just the peep hole of `Solve()`.
 
 
