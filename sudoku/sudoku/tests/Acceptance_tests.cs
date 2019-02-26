@@ -41,5 +41,28 @@ namespace sudoku.tests
             
             Assert.True(SolutionChecker.Check(result));
         }
+        
+        [Fact]
+        public void Puzzle3_2()
+        {
+            // Source: http://www.7sudoku.com/very-difficult
+            var puzzle = new[,] {
+                {0,1,0, 0,0,9, 0,7,4},
+                {7,0,0, 0,3,0, 0,0,0},
+                {0,4,0, 7,2,0, 3,0,1},
+                
+                {0,0,0, 0,0,0, 0,0,9},
+                {0,6,7, 0,0,0, 2,1,0},
+                {5,0,0, 0,0,0, 0,0,0},
+                
+                {4,0,2, 0,7,1, 0,6,0},
+                {0,0,0, 0,4,0, 0,0,3},
+                {3,5,0, 6,0,0, 0,2,0}
+            };
+
+            var result = SudokuSolver.Solve(puzzle);
+            
+            Assert.True(SolutionChecker.Check(result));
+        }
     }
 }
