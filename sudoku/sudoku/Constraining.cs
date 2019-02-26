@@ -54,7 +54,7 @@ namespace sudoku
             return true;
         }
 
-        internal static bool Check_for_unique_fixes(IEnumerable<Workbench.Cell> context) {
+        static bool Check_for_unique_fixes(IEnumerable<Workbench.Cell> context) {
             var solutionNumberFrequencies = new Dictionary<int,int>();
             foreach(var c in context)
                 if (c.IsFixed) {

@@ -61,30 +61,5 @@ namespace sudoku.tests
                         c.RemoveCandidate(i);
             }
         }
-
-        [Fact]
-        public void __Check_unique_fixes()
-        {
-            var puzzle = new[,] {
-                {0,3,5, 2,7,1, 4,8,9},
-                {9,4,1, 8,6,5, 3,2,7},
-                {2,7,8, 3,9,4, 6,1,5},
-                
-                {8,6,3, 1,2,7, 5,9,4},
-                {1,9,4, 6,5,3, 2,7,8},
-                {7,5,2, 9,4,8, 1,6,3},
-                
-                {3,1,7, 5,8,2, 9,4,6},
-                {4,2,9, 7,1,6, 8,5,2},
-                {5,8,6, 4,3,9, 7,1,2}
-            };
-            var wb = new Workbench(puzzle);
-
-            var horizon = wb.Horizon(wb[1, 8]);
-            
-            Assert.True(Constraining.Check_for_unique_fixes(horizon.Row));
-            Assert.True(Constraining.Check_for_unique_fixes(horizon.Box));
-            Assert.False(Constraining.Check_for_unique_fixes(horizon.Col));
-        }
     }
 }

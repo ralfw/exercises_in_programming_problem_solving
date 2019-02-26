@@ -121,20 +121,20 @@ namespace sudoku
         }
         
         
-        IEnumerable<(int row, int col)> RowCoordinates(int row, int col) {
+        private IEnumerable<(int row, int col)> RowCoordinates(int row, int col) {
             for (var c = 0; c < _cells.GetLength(1); c++)
                 if (c != col)
                     yield return (row, c);
         }
         
-        IEnumerable<(int row, int col)> ColCoordinates(int row, int col) {
+        private IEnumerable<(int row, int col)> ColCoordinates(int row, int col) {
             // column coordinates
             for (var r = 0; r < _cells.GetLength(0); r++)
                 if (r != row)
                     yield return (r, col);
         }
         
-        IEnumerable<(int row, int col)> BoxCoordinates(int row, int col)
+        private IEnumerable<(int row, int col)> BoxCoordinates(int row, int col)
         {
             var boxHeight = (int)Math.Sqrt(_cells.GetLength(0));
             var boxWidth = (int) Math.Sqrt(_cells.GetLength(1));
